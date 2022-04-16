@@ -1,0 +1,18 @@
+h1 {
+  text-align: left;
+}
+
+.tabs {
+  display: flex;
+
+  & > div {
+    width: 33%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 640px) {
+  .tabs > div {
+    min-width: 106px;
+  }
+}

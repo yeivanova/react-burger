@@ -1,0 +1,14 @@
+.price_block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.price {
+  svg {
+    width: 33px;
+    height: 33px;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+}

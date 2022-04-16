@@ -1,31 +1,79 @@
-.App {
-  text-align: center;
+@import-normalize;
+
+:root {
+  --text-color: #f2f2f3;
+  --primary-color: #8585ad;
+  --background-color: #1c1c21;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/JetBrainsMono-Regular.ttf") format("ttf");
+}
+
+.App {
+  text-align: center;
+  font-style: normal;
+  font-weight: 400;
+  font-family: "JetBrains Mono", Arial, sans-serif;
+  background: var(--background-color);
+  /* height: 100vh; */
+  overflow: hidden;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1240px;
+  min-height: calc(100vh - 88px);
+  margin: auto;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  flex: 0 1 600px;
+  max-width: 50%;
+  min-height: 400px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.column-inner {
+  max-height: 664px;
+  overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .column {
+    max-width: 100%;
+  }
+
+  .page-container {
+    max-height: none;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +83,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  position: absolute;
+  background: #2f2f37;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
 }
