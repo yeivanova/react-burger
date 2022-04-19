@@ -8,7 +8,7 @@ import {
 
 function IngredientItem({ data, cart }) {
   return (
-    <li className={`${styles.ingredient_item} mb-8`} key={data._id}>
+    <li className={`${styles.ingredient_item} mb-8`}>
       {cart.map((item, index) =>
         data._id === item._id ? (
           <Counter count={item.count} size="default" />
@@ -16,7 +16,11 @@ function IngredientItem({ data, cart }) {
           ""
         )
       )}
-      <img className={`${styles.ingredient_image}`} src={data.image} alt="" />
+      <img
+        className={`${styles.ingredient_image}`}
+        src={data.image}
+        alt={data.name}
+      />
       <div
         className={`${styles.ingredient_price} text_type_digits-default mt-1 mb-1`}
       >
@@ -30,11 +34,8 @@ function IngredientItem({ data, cart }) {
 }
 
 IngredientItem.propTypes = {
-  data: PropTypes.shape({
-    name: PropTypes.string,
-    price: PropTypes.number,
-    image: PropTypes.string,
-  }),
+  data: PropTypes.object.isRequired,
+  cart: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default IngredientItem;

@@ -1,8 +1,11 @@
 .product_list {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-top: 100px;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .price {
@@ -18,7 +21,7 @@
   overflow-y: auto;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 96px auto;
 }
 
 .item {
@@ -26,10 +29,24 @@
   padding-left: 32px;
   margin-right: 8px;
 
+  &:first-of-type {
+    position: fixed;
+    margin-top: -96px;
+  }
+
+  &:last-of-type {
+    position: absolute;
+    bottom: 40px;
+  }
+
   & > svg {
     position: absolute;
     left: 0;
     top: 50%;
     transform: translateY(-12px);
+  }
+
+  & > div {
+    background-color: #1c1c21;
   }
 }

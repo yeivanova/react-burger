@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import IngredientSection from "../ingredient-section/ingredient-section.js";
 import styles from "./burger-ingredients.module.scss";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -20,9 +21,10 @@ function BurgerIngredients({ cart, data }) {
         </Tab>
       </div>
 
-      <div className="column-inner mt-10">
+      <div className={`${styles.column_inner} mt-10`}>
         <div id="bun" className="tabcontent">
           <IngredientSection
+            key="bun"
             sectionTitle="Булки"
             type="bun"
             cart={cart}
@@ -31,6 +33,7 @@ function BurgerIngredients({ cart, data }) {
         </div>
         <div id="sauce" className="tabcontent">
           <IngredientSection
+            key="sauce"
             sectionTitle="Соусы"
             type="sauce"
             cart={cart}
@@ -39,6 +42,7 @@ function BurgerIngredients({ cart, data }) {
         </div>
         <div id="main" className="tabcontent">
           <IngredientSection
+            key="main"
             sectionTitle="Начинки"
             type="main"
             cart={cart}
@@ -49,5 +53,10 @@ function BurgerIngredients({ cart, data }) {
     </>
   );
 }
+
+BurgerIngredients.propTypes = {
+  cart: PropTypes.arrayOf(PropTypes.object).isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default BurgerIngredients;

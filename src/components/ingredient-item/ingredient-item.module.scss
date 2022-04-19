@@ -2,9 +2,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  //flex: 0 0 272px;
+  flex: 1 1 0px;
   max-width: 272px;
-  min-width: 144px;
   cursor: pointer;
 
   &:hover {

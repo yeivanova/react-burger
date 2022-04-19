@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Button,
   CurrencyIcon,
@@ -17,5 +18,9 @@ function PriceBlock({ total }) {
     </section>
   );
 }
+
+PriceBlock.propTypes = {
+  total: PropTypes.number.isRequired,
+};
 
 export default PriceBlock;
