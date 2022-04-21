@@ -1,0 +1,43 @@
+.ingredient_item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0px;
+  max-width: 272px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--background-color);
+  }
+}
+
+.ingredient_price {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    margin-left: 9px;
+  }
+}
+
+.ingredient_name {
+  height: 48px;
+  overflow: hidden;
+}
+
+.ingredient_image {
+  max-width: 240px;
+  margin: auto;
+}
+
+@media (max-width: 640px) {
+  .ingredient_item {
+    // max-width: 144px;
+  }
+
+  .ingredient_image {
+    // max-width: 144px;
+  }
+}

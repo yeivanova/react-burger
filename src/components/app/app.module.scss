@@ -1,0 +1,90 @@
+@import-normalize;
+
+:root {
+  --text-color: #f2f2f3;
+  --primary-color: #8585ad;
+  --background-color: #131316;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../fonts/JetBrainsMono-Regular.ttf") format("ttf");
+}
+
+.app {
+  text-align: center;
+  font-style: normal;
+  font-weight: 400;
+  font-family: "JetBrains Mono", Arial, sans-serif;
+  background: var(--background-color);
+  /* height: 100vh; */
+  overflow: hidden;
+}
+
+.page_container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1240px;
+  min-height: calc(100vh - 88px);
+  margin: auto;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  flex: 0 1 600px;
+  max-width: 50%;
+  min-height: 400px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .column {
+    max-width: 100%;
+  }
+
+  .page-container {
+    max-height: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  position: absolute;
+  background: #2f2f37;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
