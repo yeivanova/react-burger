@@ -15,13 +15,19 @@ function App() {
 
   useEffect(() => {
     fetch(apiUrl)
-      .then((res) => res.json())
       .then((result) => {
+        if (result.ok) {
+          return result.json();
+        }
+        throw result.status;
+      })
+      .then((data) => {
         setSuccess(true);
-        setItems(result.data);
+        setItems(data.data);
       })
       .catch((error) => {
-        setSuccess(true);
+        console.error("Ошибка:", error);
+        setSuccess(false);
         setError(error);
       });
   }, []);

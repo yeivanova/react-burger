@@ -46,7 +46,16 @@ function BurgerConstructor({ items, cart }) {
                     ? "bottom"
                     : ""
                 }
-                text={items.find((item) => item._id === id).name}
+                isLocked={
+                  index === 0 ? true : index === cart.length - 1 ? true : ""
+                }
+                text={`${items.find((item) => item._id === id).name}${
+                  index === 0
+                    ? " (верх)"
+                    : index === cart.length - 1
+                    ? " (верх)"
+                    : ""
+                }`}
                 price={items.find((item) => item._id === id).price}
                 thumbnail={items.find((item) => item._id === id).image}
               />

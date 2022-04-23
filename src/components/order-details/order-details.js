@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styles from "./order-details.module.scss";
 import doneImg from "../../images/done.png";
 
@@ -24,7 +23,5 @@ function OrderDetails() {
     </div>
   );
 }
-
-OrderDetails.propTypes = {};
 
 export default OrderDetails;

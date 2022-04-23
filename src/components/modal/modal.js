@@ -14,7 +14,7 @@ function Modal({ isOpen = false, closeMe, children, title = "" }) {
 
   useEffect(() => {
     const close = (e) => {
-      if (e.keyCode === 27) {
+      if (e.key === "Escape") {
         closeModal();
       }
     };
