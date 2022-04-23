@@ -9,7 +9,7 @@
 }
 
 .price {
-  color: var(--text-color);
+  color: var(--text-primary-color);
 }
 
 .inner {
@@ -30,8 +30,8 @@
   margin-right: 8px;
 
   &:first-of-type {
-    position: fixed;
-    margin-top: -96px;
+    position: absolute;
+    top: 100px;
   }
 
   &:last-of-type {
@@ -47,6 +47,6 @@
   }
 
   & > div {
-    background-color: #1c1c21;
+    background-color: var(--background);
   }
 }
