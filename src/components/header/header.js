@@ -9,16 +9,16 @@ import {
 
 function Header() {
   return (
-    <header className={`${styles.header} pt-4 pb-4`}>
-      <nav className={`${styles.navbar}`}>
+    <header className={`${styles.header}`}>
+      <nav className={`${styles.navbar} p-4`}>
         <ul className={`${styles.navigation_list}`}>
-          <li className="navbar_item">
+          <li className="navbar_item mr-2">
             <button
               className={`${`${styles.button} ${styles.button_state_current} text_type_main-default`} ${
                 styles.button_state_current
               } text_type_main-default`}
             >
-              <BurgerIcon type="primary" />
+              <BurgerIcon type="secondary" />
               Конструктор
             </button>
           </li>
