@@ -1,15 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "./order-details.module.scss";
 import doneImg from "../../images/done.png";
 
-function OrderDetails() {
+function OrderDetails({ orderNumber }) {
   return (
     <div className="pt-30 pb-30">
       <p className="text text_type_main-medium mb-15">
         <span
           className={`${styles.order_number} text text_type_digits-large mb-8`}
         >
-          034536
+          {orderNumber}
         </span>
         идентификатор заказа
       </p>
@@ -23,5 +24,9 @@ function OrderDetails() {
     </div>
   );
 }
+
+OrderDetails.propTypes = {
+  orderNumber: PropTypes.number.isRequired,
+};
 
 export default OrderDetails;

@@ -15,7 +15,7 @@ function PriceBlock({ total, children }) {
 }
 
 PriceBlock.propTypes = {
-  total: PropTypes.number.isRequired,
+  //total: PropTypes.number.isRequired,
   children: PropTypes.object.isRequired,
 };
 

@@ -13,20 +13,21 @@ function Header() {
       <nav className={`${styles.navbar} p-4`}>
         <ul className={`${styles.navigation_list}`}>
           <li className="navbar_item mr-2">
-            <button
-              className={`${`${styles.button} ${styles.button_state_current} text_type_main-default`} ${
+            <a
+              href="constructor"
+              className={`${`${styles.link} ${styles.link_state_current} text_type_main-default`} ${
                 styles.button_state_current
               } text_type_main-default`}
             >
               <BurgerIcon type="secondary" />
               Конструктор
-            </button>
+            </a>
           </li>
           <li className="navbar_item">
-            <button className={`${styles.button} text_type_main-default`}>
+            <a href="feed" className={`${styles.link} text_type_main-default`}>
               <ListIcon type="primary" />
               Лента заказов
-            </button>
+            </a>
           </li>
         </ul>
         <a href="/" className={styles.logo}>
@@ -36,10 +37,13 @@ function Header() {
           className={`${styles.navigation_list} ${styles.navigation_list_right}`}
         >
           <li className="navbar_item">
-            <button className={`${styles.button} text_type_main-default`}>
+            <a
+              href="profile"
+              className={`${styles.link} text_type_main-default`}
+            >
               <ProfileIcon type="primary" />
               Личный кабинет
-            </button>
+            </a>
           </li>
         </ul>
       </nav>
