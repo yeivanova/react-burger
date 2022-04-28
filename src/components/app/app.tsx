@@ -32,10 +32,10 @@ function App() {
           ) : (
             <ItemsContext.Provider value={items}>
               <div className={`${styles.column} pb-10`}>
-                <BurgerIngredients cart={cartData} items={items} />
+                <BurgerIngredients cart={cartData} />
               </div>
               <div className={`${styles.column} pb-10`}>
-                <BurgerConstructor cart={cartData} items={items} />
+                <BurgerConstructor cart={cartData} />
               </div>
             </ItemsContext.Provider>
           )}

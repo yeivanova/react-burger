@@ -4,13 +4,14 @@ const checkResponse = (res) => {
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
+const checkSuccess = (data, returnValue) => {
+  return data.success ? returnValue : Promise.reject(data);
+};
+
 export const getIngredients = () => {
   return fetch(`${BURGER_API_URL}/ingredients`)
     .then(checkResponse)
-    .then((data) => {
-      if (data.success) return data.data;
-      return Promise.reject(data);
-    });
+    .then((data) => checkSuccess(data, data.data));
 };
 
 export const getOrder = (ingredientsArray) => {
@@ -24,8 +25,5 @@ export const getOrder = (ingredientsArray) => {
 
   return fetch(`${BURGER_API_URL}/orders`, requestOptions)
     .then(checkResponse)
-    .then((data) => {
-      if (data.success) return data.order.number;
-      return Promise.reject(data);
-    });
+    .then((data) => checkSuccess(data, data.order.number));
 };

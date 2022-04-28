@@ -26,10 +26,6 @@ function BurgerConstructor({ cart }) {
   });
 
   useEffect(() => {
-    getOrder(cart)
-      .then(setCurrentOrder)
-      .catch(() => console.error("Ошибка в получении номера заказа."));
-
     initialState.items = setInitialState(cart);
     if (typeof initialState !== "undefined") {
       cart.forEach((el) => {
@@ -73,6 +69,13 @@ function BurgerConstructor({ cart }) {
     setDisplayModal(false);
   };
 
+  const makeOrder = () => {
+    openModal();
+    getOrder(cart)
+      .then(setCurrentOrder)
+      .catch(() => console.error("Ошибка в получении номера заказа."));
+  };
+
   return (
     <>
       <section className={`${styles.product_list} pl-4 pb-10`}>
@@ -111,7 +114,7 @@ function BurgerConstructor({ cart }) {
         </ul>
       </section>
       <PriceBlock total={totalState.total}>
-        <Button type="primary" size="large" onClick={openModal}>
+        <Button type="primary" size="large" onClick={makeOrder}>
           Оформить заказ
         </Button>
       </PriceBlock>
@@ -125,7 +128,6 @@ function BurgerConstructor({ cart }) {
 }
 
 BurgerConstructor.propTypes = {
-  items: PropTypes.arrayOf(IngredientPropTypes.isRequired).isRequired,
   cart: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

@@ -130,7 +130,6 @@ function BurgerIngredients({ cart }) {
 }
 
 BurgerIngredients.propTypes = {
-  items: PropTypes.arrayOf(IngredientPropTypes.isRequired).isRequired,
   cart: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
