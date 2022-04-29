@@ -5,22 +5,22 @@ import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { IngredientPropTypes } from "../../utils/prop-types.js";
 
 function IngredientItem({ item, cart, customClickEvent }) {
   let counter = 0;
+  cart.forEach((el) => {
+    item._id === el && ++counter;
+  });
+
   return (
     <li
       className={`${styles.ingredient_item} mb-8`}
       id={item._id}
       onClick={customClickEvent}
+      key={item._id}
     >
-      {cart.map((cartItem, index) =>
-        item._id === cartItem ? (
-          <Counter count={++counter} size="default" key={index} />
-        ) : (
-          ""
-        )
-      )}
+      {counter > 0 && <Counter count={counter} size="default" />}
       <img
         className={`${styles.ingredient_image}`}
         src={item.image}
@@ -39,9 +39,9 @@ function IngredientItem({ item, cart, customClickEvent }) {
 }
 
 IngredientItem.propTypes = {
-  item: PropTypes.object.isRequired,
+  item: IngredientPropTypes.isRequired,
   cart: PropTypes.arrayOf(PropTypes.string).isRequired,
   customClickEvent: PropTypes.func.isRequired,
 };
 
-export default IngredientItem;
+export default React.memo(IngredientItem);

@@ -7,15 +7,15 @@ function ModalOverlay(props) {
     props.onClose(event);
   };
 
-  if (!props.isOpen) {
-    return null;
-  }
+  // if (!props.isOpen) {
+  //   return null;
+  // }
 
   return <div className={`${styles.overlay}`} onClick={handleClick} />;
 }
 
 ModalOverlay.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
+  // isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 

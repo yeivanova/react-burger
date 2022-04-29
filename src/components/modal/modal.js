@@ -7,10 +7,13 @@ import styles from "./modal.module.scss";
 
 const modalRoot = document.getElementById("react-modals");
 
-function Modal({ isOpen = false, closeMe, children, title = "" }) {
-  const closeModal = useCallback((event) => {
-    closeMe(event);
-  }, []);
+function Modal({ closeMe, children, title = "" }) {
+  const closeModal = useCallback(
+    (event) => {
+      closeMe(event);
+    },
+    [closeMe]
+  );
 
   useEffect(() => {
     const close = (e) => {
@@ -21,10 +24,6 @@ function Modal({ isOpen = false, closeMe, children, title = "" }) {
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, [closeModal]);
-
-  if (!isOpen) {
-    return null;
-  }
 
   return ReactDOM.createPortal(
     <>
@@ -41,14 +40,13 @@ function Modal({ isOpen = false, closeMe, children, title = "" }) {
         )}
         {children}
       </div>
-      <ModalOverlay isOpen={isOpen} onClose={closeModal} />
+      <ModalOverlay onClose={closeModal} />
     </>,
     modalRoot
   );
 }
 
 Modal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
   closeMe: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired,
   title: PropTypes.string,
