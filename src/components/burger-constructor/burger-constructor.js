@@ -1,49 +1,70 @@
-import React, { useState, useContext, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import uuid from "react-uuid";
-import PropTypes from "prop-types";
 import styles from "./burger-constructor.module.scss";
+import ConstructorItem from "../constructor-item/constructor-item.js";
 import PriceBlock from "../price-block/price-block.js";
 import OrderDetails from "../order-details/order-details.js";
 import Modal from "../modal/modal.js";
 import {
-  ConstructorElement,
-  DragIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IngredientPropTypes } from "../../utils/prop-types.js";
-import { ItemsContext } from "../../services/burger-context";
-import { getOrder } from "../../utils/burger-api.js";
+import { useDispatch, useSelector } from "react-redux";
+import { useDrop } from "react-dnd";
+import {
+  ADD_ITEM,
+  SET_BUN,
+  SORT_ITEMS,
+} from "../../services/actions/constructor";
+import { getOrder } from "../../services/actions/order";
 
-function BurgerConstructor({ cart }) {
-  const items = useContext(ItemsContext);
-  const [bun, setBun] = useState({});
-  const [displayModal, setDisplayModal] = useState(false);
-  const [error] = useState();
-  const [currentOrder, setCurrentOrder] = useState();
-  const [initialState, setInitialState] = useState({
-    items: [],
-    total: 0,
+function BurgerConstructor() {
+  const dispatch = useDispatch();
+  const { items, cartItems, bunItem, number } = useSelector((store) => ({
+    items: store.ingredients.items,
+    cartItems: store.cartItems.cartItems,
+    bunItem: store.cartItems.bunItem,
+    number: store.order.number,
+  }));
+
+  const moveItem = (item) => {
+    item.item.cartItemId = uuid();
+    item.item.type === "bun"
+      ? dispatch({
+          type: SET_BUN,
+          ...item,
+        })
+      : dispatch({
+          type: ADD_ITEM,
+          ...item,
+        });
+  };
+
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: "items",
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+    drop(itemId) {
+      moveItem(itemId);
+    },
   });
 
+  const [displayModal, setDisplayModal] = useState(false);
+  const [error] = useState();
+
   useEffect(() => {
-    initialState.items = setInitialState(cart);
-    if (typeof initialState !== "undefined") {
-      cart.forEach((el) => {
-        items.find((item) => item._id === el).type === "bun" &&
-          setBun(items.find((item) => item._id === el));
-      });
-    }
     totalStateDispatcher({ type: "set" });
-  }, [initialState, cart, items]);
+  }, [cartItems, items, bunItem]);
 
   const totalInitialState = { total: 0 };
 
   function reducer(state, action) {
     switch (action.type) {
       case "set":
-        let total = totalInitialState.total;
-        cart.forEach((el) => {
-          total = total + items.find((item) => item._id === el).price;
+        let bunPrice = bunItem.length !== 0 ? bunItem.price * 2 : 0;
+        let total = totalInitialState.total + bunPrice;
+        cartItems.forEach((el) => {
+          total = total + el.price;
         });
         return {
           total: total,
@@ -51,7 +72,7 @@ function BurgerConstructor({ cart }) {
       case "reset":
         return totalInitialState;
       default:
-        throw new Error(`Wrong type of action: ${action.type}`);
+        throw new Error(`Неверный тип действия: ${action.type}`);
     }
   }
 
@@ -71,46 +92,54 @@ function BurgerConstructor({ cart }) {
 
   const makeOrder = () => {
     openModal();
-    getOrder(cart)
-      .then(setCurrentOrder)
-      .catch(() => console.error("Ошибка в получении номера заказа."));
+    let orderContent = [...cartItems.map((item) => item._id), bunItem._id];
+    dispatch(getOrder(orderContent));
+  };
+
+  const moveCard = (dragIndex, hoverIndex) => {
+    const changedCartItems = cartItems.slice();
+    changedCartItems.splice(dragIndex, 1);
+    changedCartItems.splice(hoverIndex, 0, cartItems[dragIndex]);
+    dispatch({
+      type: SORT_ITEMS,
+      cartItems: changedCartItems,
+    });
   };
 
   return (
     <>
       <section className={`${styles.product_list} pl-4 pb-10`}>
-        <ul className={`${styles.inner} ${styles.list}`}>
-          <li className={styles.item} key={uuid()}>
-            <ConstructorElement
+        <ul
+          className={`${styles.inner} ${styles.list} ${
+            isHover ? styles.on_hover : ""
+          } `}
+          ref={dropTarget}
+        >
+          {bunItem.length !== 0 && (
+            <ConstructorItem
+              item={bunItem}
+              key={uuid()}
               type={"top"}
               isLocked={true}
-              text={`${bun.name} (верх)`}
-              price={bun.price}
-              thumbnail={bun.image}
             />
-          </li>
-          {cart.map(
-            (id, index) =>
-              items.find((item) => item._id === id)._id !== bun._id && (
-                <li className={styles.item} key={uuid()}>
-                  <DragIcon type="primary" />
-                  <ConstructorElement
-                    text={`${items.find((item) => item._id === id).name}`}
-                    price={items.find((item) => item._id === id).price}
-                    thumbnail={items.find((item) => item._id === id).image}
-                  />
-                </li>
-              )
           )}
-          <li className={styles.item} key={uuid()}>
-            <ConstructorElement
+          {cartItems.map((item, index) => (
+            <ConstructorItem
+              item={item}
+              isLocked={false}
+              key={uuid()}
+              moveCard={moveCard}
+              index={index}
+            />
+          ))}
+          {bunItem.length !== 0 && (
+            <ConstructorItem
+              item={bunItem}
+              key={uuid()}
               type={"bottom"}
               isLocked={true}
-              text={`${bun.name} (низ)`}
-              price={bun.price}
-              thumbnail={bun.image}
             />
-          </li>
+          )}
         </ul>
       </section>
       <PriceBlock total={totalState.total}>
@@ -120,15 +149,11 @@ function BurgerConstructor({ cart }) {
       </PriceBlock>
       {displayModal && !error && (
         <Modal closeMe={closeModal}>
-          <OrderDetails orderNumber={currentOrder} />
+          <OrderDetails orderNumber={number} />
         </Modal>
       )}
     </>
   );
 }
-
-BurgerConstructor.propTypes = {
-  cart: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 
 export default BurgerConstructor;

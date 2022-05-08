@@ -6,19 +6,39 @@ import {
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IngredientPropTypes } from "../../utils/prop-types.js";
+import { useSelector } from "react-redux";
+import { useDrag } from "react-dnd";
 
-function IngredientItem({ item, cart, customClickEvent }) {
-  let counter = 0;
-  cart.forEach((el) => {
-    item._id === el && ++counter;
+function IngredientItem({ item, customClickEvent }) {
+  const { cartItems, bunItem } = useSelector((store) => ({
+    cartItems: store.cartItems.cartItems,
+    bunItem: store.cartItems.bunItem,
+  }));
+
+  const [{ dragEffect }, ref] = useDrag({
+    type: "items",
+    item: { item },
+    collect: (monitor) => ({
+      dragEffect: monitor.isDragging(),
+    }),
   });
+
+  let counter = 0;
+  cartItems.forEach((el) => {
+    item._id === el._id && ++counter;
+  });
+
+  bunItem._id === item._id && ++counter;
 
   return (
     <li
-      className={`${styles.ingredient_item} mb-8`}
+      className={`${styles.ingredient_item} ${
+        dragEffect ? styles.drag_effect : ""
+      } mb-8`}
       id={item._id}
       onClick={customClickEvent}
       key={item._id}
+      ref={ref}
     >
       {counter > 0 && <Counter count={counter} size="default" />}
       <img
@@ -40,7 +60,6 @@ function IngredientItem({ item, cart, customClickEvent }) {
 
 IngredientItem.propTypes = {
   item: IngredientPropTypes.isRequired,
-  cart: PropTypes.arrayOf(PropTypes.string).isRequired,
   customClickEvent: PropTypes.func.isRequired,
 };
 

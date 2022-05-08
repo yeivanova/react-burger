@@ -32,12 +32,6 @@
   margin: auto;
 }
 
-@media (max-width: 640px) {
-  .ingredient_item {
-    // max-width: 144px;
-  }
-
-  .ingredient_image {
-    // max-width: 144px;
-  }
+.drag_effect {
+  opacity: 0.5;
 }

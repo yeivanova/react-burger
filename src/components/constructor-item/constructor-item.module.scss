@@ -1,0 +1,34 @@
+.item {
+  width: calc(100% - 32px);
+  position: relative;
+  padding-left: 32px;
+  margin-right: 0;
+
+  & > svg {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-12px);
+  }
+
+  & > div {
+    width: 100%;
+    background-color: var(--background);
+  }
+}
+
+.item_bun {
+  &:first-of-type {
+    position: absolute;
+    top: 100px;
+  }
+
+  &:last-of-type {
+    position: absolute;
+    bottom: 40px;
+  }
+}
+
+.drag_effect {
+  opacity: 0.1;
+}
