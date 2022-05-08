@@ -59,16 +59,7 @@ function BurgerConstructor() {
       cartItems: cartItems.map((item) => item.price),
       bunItem: bunItem.price,
     });
-    //totalStateDispatcher({ type: "set" });
   }, [dispatch, cartItems, bunItem]);
-
-  // const totalInitialState = { total: 0 };
-
-  // const [totalState, totalStateDispatcher] = useReducer(
-  //   reducer,
-  //   totalInitialState,
-  //   undefined
-  // );
 
   const openModal = () => {
     setDisplayModal(true);
@@ -77,8 +68,8 @@ function BurgerConstructor() {
   const closeModal = () => {
     setDisplayModal(false);
     dispatch({
-      type: NUMBER_RESET
-    })
+      type: NUMBER_RESET,
+    });
   };
 
   const makeOrder = () => {
