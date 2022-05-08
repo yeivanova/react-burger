@@ -2,10 +2,11 @@ import {
   GET_ORDER_REQUEST,
   GET_ORDER_SUCCESS,
   GET_ORDER_FAILED,
+  NUMBER_RESET,
 } from "../actions/order";
 
 const initialState = {
-  number: 0,
+  number: null,
   numberRequest: false,
   numberFailed: false,
 };
@@ -28,8 +29,15 @@ export const orderReducer = (state = initialState, action) => {
     case GET_ORDER_FAILED: {
       return {
         ...state,
+        number: null,
         numberFailed: true,
         numberRequest: false,
+      };
+    }
+    case NUMBER_RESET: {
+      return {
+        ...state,
+        number: null,
       };
     }
     default:

@@ -1,6 +1,7 @@
 export const GET_ORDER_REQUEST = "GET_ORDER_REQUEST";
 export const GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS";
 export const GET_ORDER_FAILED = "GET_ORDER_FAILED";
+export const NUMBER_RESET = "NUMBER_RESET";
 
 const urlApi = "https://norma.nomoreparties.space/api/orders";
 export function getOrder(orderContent) {

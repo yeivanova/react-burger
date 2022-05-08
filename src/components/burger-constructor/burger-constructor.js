@@ -5,23 +5,24 @@ import ConstructorItem from "../constructor-item/constructor-item.js";
 import PriceBlock from "../price-block/price-block.js";
 import OrderDetails from "../order-details/order-details.js";
 import Modal from "../modal/modal.js";
-import {
-  Button,
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 import {
   ADD_ITEM,
   SET_BUN,
+  SET_TOTAL,
   SORT_ITEMS,
 } from "../../services/actions/constructor";
-import { getOrder } from "../../services/actions/order";
+import { getOrder, NUMBER_RESET } from "../../services/actions/order";
 
 function BurgerConstructor() {
   const dispatch = useDispatch();
-  const { items, cartItems, bunItem, number } = useSelector((store) => ({
+  const { items, cartItems, total, bunItem, number } = useSelector((store) => ({
     items: store.ingredients.items,
     cartItems: store.cartItems.cartItems,
+    total: store.total.total,
     bunItem: store.cartItems.bunItem,
     number: store.order.number,
   }));
@@ -53,34 +54,21 @@ function BurgerConstructor() {
   const [error] = useState();
 
   useEffect(() => {
-    totalStateDispatcher({ type: "set" });
-  }, [cartItems, items, bunItem]);
+    dispatch({
+      type: SET_TOTAL,
+      cartItems: cartItems.map((item) => item.price),
+      bunItem: bunItem.price,
+    });
+    //totalStateDispatcher({ type: "set" });
+  }, [dispatch, cartItems, bunItem]);
 
-  const totalInitialState = { total: 0 };
+  // const totalInitialState = { total: 0 };
 
-  function reducer(state, action) {
-    switch (action.type) {
-      case "set":
-        let bunPrice = bunItem.length !== 0 ? bunItem.price * 2 : 0;
-        let total = totalInitialState.total + bunPrice;
-        cartItems.forEach((el) => {
-          total = total + el.price;
-        });
-        return {
-          total: total,
-        };
-      case "reset":
-        return totalInitialState;
-      default:
-        throw new Error(`Неверный тип действия: ${action.type}`);
-    }
-  }
-
-  const [totalState, totalStateDispatcher] = useReducer(
-    reducer,
-    totalInitialState,
-    undefined
-  );
+  // const [totalState, totalStateDispatcher] = useReducer(
+  //   reducer,
+  //   totalInitialState,
+  //   undefined
+  // );
 
   const openModal = () => {
     setDisplayModal(true);
@@ -88,6 +76,9 @@ function BurgerConstructor() {
 
   const closeModal = () => {
     setDisplayModal(false);
+    dispatch({
+      type: NUMBER_RESET
+    })
   };
 
   const makeOrder = () => {
@@ -142,7 +133,7 @@ function BurgerConstructor() {
           )}
         </ul>
       </section>
-      <PriceBlock total={totalState.total}>
+      <PriceBlock total={total}>
         <Button type="primary" size="large" onClick={makeOrder}>
           Оформить заказ
         </Button>

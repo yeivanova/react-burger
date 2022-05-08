@@ -9,7 +9,6 @@ const initialState = {
   items: [],
   itemsRequest: false,
   itemsFailed: false,
-  //currentTab: "bun",
 };
 
 const initialStateTab = {
@@ -22,7 +21,6 @@ export const ingredientsReducer = (state = initialState, action) => {
       return {
         ...state,
         itemsRequest: true,
-        //itemsFailed: false,
       };
     }
     case GET_INGREDIENTS_SUCCESS: {
