@@ -15,38 +15,18 @@
 .inner {
   display: flex;
   flex-direction: column;
-  align-items: self-start;
+  align-items: center;
   gap: 16px;
   max-height: 464px;
   overflow-y: auto;
   list-style: none;
   padding: 0;
   margin: 96px auto;
+  width: 100%;
+  min-height: 180px;
 }
 
-.item {
-  position: relative;
-  padding-left: 32px;
-  margin-right: 8px;
-
-  &:first-of-type {
-    position: absolute;
-    top: 100px;
-  }
-
-  &:last-of-type {
-    position: absolute;
-    bottom: 40px;
-  }
-
-  & > svg {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-12px);
-  }
-
-  & > div {
-    background-color: var(--background);
-  }
+.on_hover {
+  box-shadow: 0 0 16px 0px #ffffff3d;
+  border-radius: 12px;
 }

@@ -1,43 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./app.module.scss";
 import Header from "../header/header.js";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients.js";
 import BurgerConstructor from "../burger-constructor/burger-constructor.js";
 import Preloader from "../preloader/preloader.js";
-import { cartData } from "../../utils/mock-order";
-import { ItemsContext } from "../../services/burger-context";
-import { getIngredients } from "../../utils/burger-api.js";
+import { useDispatch, useSelector } from "react-redux";
+import { loadData } from "../../services/actions/ingredients";
 
 function App() {
-  const [error] = useState<any>();
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { itemsRequest, itemsFailed } = useSelector((store) => ({
+    itemsRequest: store.ingredients.itemsRequest,
+    itemsFailed: store.ingredients.itemsFailed,
+  }));
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getIngredients()
-      .then(setItems)
-      .catch(() => console.error("Ошибка в получении данных."))
-      .finally(() => setIsLoading(false));
-  }, []);
+    dispatch(loadData());
+  }, [dispatch]);
 
   return (
     <div className={`${styles.app}`}>
       <Header />
       <main>
         <div className={`${styles.page_container} pl-4 pr-4`}>
-          {error && <div>Ошибка: {error.message}</div>}
-          {isLoading ? (
+          {itemsFailed ? (
+            <div className="text text_type_main-large mt-10 mb-5">
+              Ошибка при загрузке данных.
+            </div>
+          ) : itemsRequest ? (
             <Preloader />
           ) : (
-            <ItemsContext.Provider value={items}>
+            <>
               <div className={`${styles.column} pb-10`}>
-                <BurgerIngredients cart={cartData} />
+                <BurgerIngredients />
               </div>
               <div className={`${styles.column} pb-10`}>
-                <BurgerConstructor cart={cartData} />
+                <BurgerConstructor />
               </div>
-            </ItemsContext.Provider>
+            </>
           )}
         </div>
       </main>
