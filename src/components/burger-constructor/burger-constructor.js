@@ -12,17 +12,44 @@ import { useDrop } from "react-dnd";
 import {
   ADD_ITEM,
   SET_BUN,
-  SET_TOTAL,
   SORT_ITEMS,
 } from "../../services/actions/constructor";
 import { getOrder, NUMBER_RESET } from "../../services/actions/order";
 
+const totalInitialState = { total: 0 };
+
+function totalReducer(state, action) {
+  switch (action.type) {
+    case "set":
+      let bunPrice =
+        action.payload.bunItem.length !== 0
+          ? action.payload.bunItem.price * 2
+          : 0;
+      let total = bunPrice;
+      action.payload.cartItems.forEach((el) => {
+        total = total + el.price;
+      });
+
+      return {
+        total: total,
+      };
+    case "reset":
+      return totalInitialState;
+    default:
+      throw new Error(`Неверный тип действия: ${action.type}`);
+  }
+}
+
 function BurgerConstructor() {
+  const [totalState, totalStateDispatcher] = useReducer(
+    totalReducer,
+    totalInitialState,
+    undefined
+  );
+
   const dispatch = useDispatch();
-  const { items, cartItems, total, bunItem, number } = useSelector((store) => ({
-    items: store.ingredients.items,
+  const { cartItems, bunItem, number } = useSelector((store) => ({
     cartItems: store.cartItems.cartItems,
-    total: store.total.total,
     bunItem: store.cartItems.bunItem,
     number: store.order.number,
   }));
@@ -54,12 +81,14 @@ function BurgerConstructor() {
   const [error] = useState();
 
   useEffect(() => {
-    dispatch({
-      type: SET_TOTAL,
-      cartItems: cartItems.map((item) => item.price),
-      bunItem: bunItem.price,
+    totalStateDispatcher({
+      type: "set",
+      payload: {
+        bunItem: bunItem,
+        cartItems: cartItems,
+      },
     });
-  }, [dispatch, cartItems, bunItem]);
+  }, [totalStateDispatcher, bunItem, cartItems]);
 
   const openModal = () => {
     setDisplayModal(true);
@@ -73,9 +102,11 @@ function BurgerConstructor() {
   };
 
   const makeOrder = () => {
-    openModal();
     let orderContent = [...cartItems.map((item) => item._id), bunItem._id];
-    dispatch(getOrder(orderContent));
+    if (typeof bunItem._id !== "undefined") {
+      dispatch(getOrder(orderContent));
+      openModal();
+    } else alert("Выберите булку!");
   };
 
   const moveCard = (dragIndex, hoverIndex) => {
@@ -124,7 +155,7 @@ function BurgerConstructor() {
           )}
         </ul>
       </section>
-      <PriceBlock total={total}>
+      <PriceBlock total={totalState.total}>
         <Button type="primary" size="large" onClick={makeOrder}>
           Оформить заказ
         </Button>

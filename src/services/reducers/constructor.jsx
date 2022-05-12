@@ -3,36 +3,11 @@ import {
   DELETE_ITEM,
   SET_BUN,
   SORT_ITEMS,
-  SET_TOTAL,
-  RESET_TOTAL,
 } from "../actions/constructor";
 
 const cartInitialState = {
   cartItems: [],
   bunItem: [],
-  total: 0,
-};
-
-export const totalReducer = (state = cartInitialState, action) => {
-  switch (action.type) {
-    case SET_TOTAL:
-      let bunPrice = action.bunItem !== undefined ? action.bunItem * 2 : 0;
-      let total = bunPrice;
-      action.cartItems.forEach((el) => {
-        total = total + el;
-      });
-      return {
-        ...state,
-        total: total,
-      };
-    case RESET_TOTAL:
-      return {
-        ...state,
-        total: 0,
-      };
-    default:
-      return state;
-  }
 };
 
 export const constructorReducer = (state = cartInitialState, action) => {
