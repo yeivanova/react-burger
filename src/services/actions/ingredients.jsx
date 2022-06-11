@@ -1,8 +1,6 @@
-//import { getIngredients } from "../../utils/burger-api.js";
-
-export const GET_INGREDIENTS_REQUEST = "GET_INGREDIENTS_REQUEST";
-export const GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS";
-export const GET_INGREDIENTS_FAILED = "GET_INGREDIENTS_FAILED";
+export const GET_INGREDIENTS_REQUEST = "INGREDIENTS/GET_REQUEST";
+export const GET_INGREDIENTS_SUCCESS = "INGREDIENTS/GET_SUCCESS";
+export const GET_INGREDIENTS_FAILED = "INGREDIENTS/GET_FAILED";
 export const CHANGE_TAB = "CHANGE_TAB";
 
 const urlApi = "https://norma.nomoreparties.space/api/ingredients";

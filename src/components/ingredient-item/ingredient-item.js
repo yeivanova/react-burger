@@ -6,15 +6,11 @@ import {
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IngredientPropTypes } from "../../utils/prop-types.js";
-import { useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
 import { useDrag } from "react-dnd";
 
-function IngredientItem({ item, customClickEvent }) {
-  const { cartItems, bunItem } = useSelector((store) => ({
-    cartItems: store.cartItems.cartItems,
-    bunItem: store.cartItems.bunItem,
-  }));
-
+function IngredientItem({ item, customClickEvent, count }) {
+  const location = useLocation();
   const [{ dragEffect }, ref] = useDrag({
     type: "items",
     item: { item },
@@ -22,13 +18,6 @@ function IngredientItem({ item, customClickEvent }) {
       dragEffect: monitor.isDragging(),
     }),
   });
-
-  let counter = 0;
-  cartItems.forEach((el) => {
-    item._id === el._id && ++counter;
-  });
-
-  bunItem._id === item._id && ++counter;
 
   return (
     <li
@@ -40,27 +29,37 @@ function IngredientItem({ item, customClickEvent }) {
       key={item._id}
       ref={ref}
     >
-      {counter > 0 && <Counter count={counter} size="default" />}
-      <img
-        className={`${styles.ingredient_image}`}
-        src={item.image}
-        alt={item.name}
-      />
-      <div
-        className={`${styles.ingredient_price} text_type_digits-default mt-1 mb-1`}
+      <Link
+        className={styles.link}
+        to={{
+          pathname: `ingredients/${item._id}`,
+          state: { isModal: location },
+        }}
       >
-        {item.price} <CurrencyIcon type="primary" />
-      </div>
-      <div className={`${styles.ingredient_name} text text_type_main-default`}>
-        {item.name}
-      </div>
+        {count > 0 && <Counter count={count} size="default" />}
+        <img
+          className={`${styles.ingredient_image}`}
+          src={item.image}
+          alt={item.name}
+        />
+        <div
+          className={`${styles.ingredient_price} text_type_digits-default mt-1 mb-1`}
+        >
+          {item.price} <CurrencyIcon type="primary" />
+        </div>
+        <div
+          className={`${styles.ingredient_name} text text_type_main-default`}
+        >
+          {item.name}
+        </div>
+      </Link>
     </li>
   );
 }
 
 IngredientItem.propTypes = {
   item: IngredientPropTypes.isRequired,
-  customClickEvent: PropTypes.func.isRequired,
+  count: PropTypes.number,
 };
 
 export default React.memo(IngredientItem);

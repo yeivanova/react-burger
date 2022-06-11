@@ -1,18 +1,27 @@
-export const GET_ORDER_REQUEST = "GET_ORDER_REQUEST";
-export const GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS";
-export const GET_ORDER_FAILED = "GET_ORDER_FAILED";
+import { baseUrl } from "../../utils/api";
+import { getCookie } from "../../utils/utils";
+import { tokenRequest } from "./user";
+export const GET_ORDER_REQUEST = "ORDER/GET_REQUEST";
+export const GET_ORDER_SUCCESS = "ORDER/GET_SUCCESS";
+export const GET_ORDER_FAILED = "ORDER/GET_FAILED";
 export const NUMBER_RESET = "NUMBER_RESET";
 
-const urlApi = "https://norma.nomoreparties.space/api/orders";
+const urlApi = `${baseUrl}/orders`;
 export function getOrder(orderContent) {
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${getCookie("accessToken")}`,
+    },
     body: JSON.stringify({
       ingredients: orderContent,
     }),
   };
-  return function (dispatch) {
+  return async function (dispatch) {
+    if (typeof getCookie("accessToken") === "undefined") {
+      await tokenRequest();
+    }
     dispatch({
       type: GET_ORDER_REQUEST,
     });

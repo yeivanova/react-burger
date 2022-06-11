@@ -1,18 +1,27 @@
 import React from "react";
 import styles from "./ingredient-details.module.scss";
-import { IngredientPropTypes } from "../../utils/prop-types.js";
+import Preloader from "../preloader/preloader";
+import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
-function IngredientDetails({ item }) {
-  return (
+function IngredientDetails() {
+  const { items } = useSelector((store) => ({
+    items: store.ingredients.items,
+  }));
+  
+  const ingredientId = useParams().id;
+  const ingredient = items.find(({ _id }) => _id === ingredientId);
+
+  return ingredient ? (
     <div className="pb-15">
       <img
         className={`${styles.ingredient_image}`}
-        src={item.image_large}
-        alt={item.name}
+        src={ingredient.image_large}
+        alt={ingredient.name}
         width="480"
         height="240"
       />
-      <p className="text text_type_main-medium mt-4 mb-8">{item.name}</p>
+      <p className="text text_type_main-medium mt-4 mb-8">{ingredient.name}</p>
       <div
         className={`${styles.ingredient_details} text text_type_main-default text_color_inactive`}
       >
@@ -21,7 +30,7 @@ function IngredientDetails({ item }) {
             Калории, ккал
           </div>
           <div className="ttext text_type_main-medium text_color_inactive">
-            {item.calories}
+            {ingredient.calories}
           </div>
         </div>
         <div>
@@ -29,7 +38,7 @@ function IngredientDetails({ item }) {
             Белки, г
           </div>
           <div className="ttext text_type_main-medium text_color_inactive">
-            {item.proteins}
+            {ingredient.proteins}
           </div>
         </div>
         <div>
@@ -37,7 +46,7 @@ function IngredientDetails({ item }) {
             Жиры, г
           </div>
           <div className="ttext text_type_main-medium text_color_inactive">
-            {item.fat}
+            {ingredient.fat}
           </div>
         </div>
         <div>
@@ -45,16 +54,14 @@ function IngredientDetails({ item }) {
             Углеводы, г
           </div>
           <div className="ttext text_type_main-medium text_color_inactive">
-            {item.carbohydrates}
+            {ingredient.carbohydrates}
           </div>
         </div>
       </div>
     </div>
+  ) : (
+    <Preloader />
   );
 }
-
-IngredientDetails.propTypes = {
-  item: IngredientPropTypes.isRequired,
-};
 
 export default IngredientDetails;
