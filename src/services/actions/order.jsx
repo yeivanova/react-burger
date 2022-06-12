@@ -6,6 +6,31 @@ export const GET_ORDER_SUCCESS = "ORDER/GET_SUCCESS";
 export const GET_ORDER_FAILED = "ORDER/GET_FAILED";
 export const NUMBER_RESET = "NUMBER_RESET";
 
+export function getOrderRequest() {
+  return {
+    type: GET_ORDER_REQUEST,
+  };
+}
+
+export function getOrderSuccess(number) {
+  return {
+    type: GET_ORDER_SUCCESS,
+    number: number,
+  };
+}
+
+export function getOrderFailed() {
+  return {
+    type: GET_ORDER_FAILED,
+  };
+}
+
+export function numberReset() {
+  return {
+    type: NUMBER_RESET,
+  };
+}
+
 const urlApi = `${baseUrl}/orders`;
 export function getOrder(orderContent) {
   const requestOptions = {
@@ -22,29 +47,20 @@ export function getOrder(orderContent) {
     if (typeof getCookie("accessToken") === "undefined") {
       await tokenRequest();
     }
-    dispatch({
-      type: GET_ORDER_REQUEST,
-    });
+    dispatch(getOrderRequest());
     fetch(urlApi, requestOptions)
       .then((res) =>
         res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
       )
       .then((data) => {
         if (data && data.success) {
-          dispatch({
-            type: GET_ORDER_SUCCESS,
-            number: data.order.number,
-          });
+          dispatch(getOrderSuccess(data.order.number));
         } else {
-          dispatch({
-            type: GET_ORDER_FAILED,
-          });
+          dispatch(getOrderFailed());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: GET_ORDER_FAILED,
-        });
+        dispatch(getOrderFailed());
       });
   };
 }

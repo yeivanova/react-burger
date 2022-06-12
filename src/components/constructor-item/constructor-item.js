@@ -86,7 +86,9 @@ function ConstructorItem({
       >
         {!isLocked && <DragIcon type="primary" />}
         <ConstructorElement
-          text={item.name}
+          text={`${item.name} ${
+            type === "top" ? " (верх)" : type === "bottom" ? " (низ)" : ""
+          }`}
           price={item.price}
           thumbnail={item.image}
           type={type}

@@ -1,13 +1,11 @@
 import { getCookie } from "../../utils/utils";
 import {
-  //GET_USER_DATA,
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_FAILED,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
-  //UPDATE_USER_DATA,
   CLEAR_USER_DATA,
   AUTHENTICATE_USER,
   UNAUTHENTICATE_USER,
@@ -84,18 +82,6 @@ export const userReducer = (state = userState, action) => {
         isAuthenticated: false,
       };
     }
-    // case GET_USER_DATA: {
-    //   return {
-    //     ...state,
-    //     userData: action.user,
-    //   };
-    // }
-    //case UPDATE_USER_DATA: {
-    //   return {
-    //     ...state,
-    //     userData: action.user,
-    //   };
-    // }
     case CLEAR_USER_DATA: {
       return {
         ...state,

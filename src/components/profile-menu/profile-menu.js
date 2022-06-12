@@ -4,7 +4,7 @@ import styles from "./profile-menu.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutRequest } from "../../services/actions/user";
 import { getCookie } from "../../utils/utils";
-import { UNAUTHENTICATE_USER } from "../../services/actions/user";
+import { unautheticateUser } from "../../services/actions/user";
 
 export function ProfileMenu() {
   const { isAuthenticated } = useSelector((store) => ({
@@ -17,9 +17,7 @@ export function ProfileMenu() {
     (e) => {
       e.preventDefault();
       dispatch(logoutRequest(getCookie("refreshToken")));
-      dispatch({
-        type: UNAUTHENTICATE_USER,
-      });
+      dispatch(unautheticateUser());
     },
     [dispatch]
   );

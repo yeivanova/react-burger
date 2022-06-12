@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import uuid from "react-uuid";
 import styles from "./burger-constructor.module.scss";
 import ConstructorItem from "../constructor-item/constructor-item.js";
@@ -10,45 +10,16 @@ import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 import {
-  ADD_ITEM,
-  SET_BUN,
-  SORT_ITEMS,
+  addItem,
+  setBun,
+  sortItems,
+  cartReset,
 } from "../../services/actions/constructor";
-import { CART_RESET } from "../../services/actions/constructor";
-import { getOrder, NUMBER_RESET } from "../../services/actions/order";
+import { getOrder, numberReset } from "../../services/actions/order";
 import { useHistory, useLocation } from "react-router-dom";
 
-//const totalInitialState = { total: 0 };
-
-// function totalReducer(state, action) {
-//   switch (action.type) {
-//     case "set":
-//       let bunPrice =
-//         action.payload.bunItem !== null ? action.payload.bunItem.price * 2 : 0;
-//       let total = bunPrice;
-//       action.payload.cartItems.forEach((el) => {
-//         total = total + el.price;
-//       });
-
-//       return {
-//         total: total,
-//       };
-//     case "reset":
-//       return totalInitialState;
-//     default:
-//       throw new Error(`Неверный тип действия: ${action.type}`);
-//   }
-// }
-
 function BurgerConstructor() {
-  // const [totalState, totalStateDispatcher] = useReducer(
-  //   totalReducer,
-  //   totalInitialState,
-  //   undefined
-  // );
-
   const dispatch = useDispatch();
-  const location = useLocation();
   const history = useHistory();
 
   const { cartItems, bunItem, number, isAuthenticated } = useSelector(
@@ -68,16 +39,7 @@ function BurgerConstructor() {
   }, [bunItem, cartItems]);
 
   const moveItem = (item) => {
-    item.item.cartItemId = uuid();
-    item.item.type === "bun"
-      ? dispatch({
-          type: SET_BUN,
-          ...item,
-        })
-      : dispatch({
-          type: ADD_ITEM,
-          ...item,
-        });
+    item.item.type === "bun" ? dispatch(setBun(item)) : dispatch(addItem(item));
   };
 
   const [{ isHover }, dropTarget] = useDrop({
@@ -93,28 +55,14 @@ function BurgerConstructor() {
   const [displayModal, setDisplayModal] = useState(false);
   const [error] = useState();
 
-  // useEffect(() => {
-  //   totalStateDispatcher({
-  //     type: "set",
-  //     payload: {
-  //       bunItem: bunItem,
-  //       cartItems: cartItems,
-  //     },
-  //   });
-  // }, [totalStateDispatcher, bunItem, cartItems]);
-
   const openModal = () => {
     setDisplayModal(true);
   };
 
   const closeModal = () => {
     setDisplayModal(false);
-    dispatch({
-      type: NUMBER_RESET,
-    });
-    dispatch({
-      type: CART_RESET,
-    });
+    dispatch(numberReset());
+    dispatch(cartReset());
   };
 
   const makeOrder = () => {
@@ -122,21 +70,16 @@ function BurgerConstructor() {
       history.replace({ pathname: `/login` });
       return;
     }
-    let orderContent = [...cartItems.map((item) => item._id), bunItem._id];
-    if (typeof bunItem._id !== "undefined") {
-      dispatch(getOrder(orderContent));
-      openModal();
-    } else alert("Выберите булку!");
+    const orderContent = [...cartItems.map((item) => item._id), bunItem._id];
+    dispatch(getOrder(orderContent));
+    openModal();
   };
 
   const moveCard = (dragIndex, hoverIndex) => {
     const changedCartItems = cartItems.slice();
     changedCartItems.splice(dragIndex, 1);
     changedCartItems.splice(hoverIndex, 0, cartItems[dragIndex]);
-    dispatch({
-      type: SORT_ITEMS,
-      cartItems: changedCartItems,
-    });
+    dispatch(sortItems(changedCartItems));
   };
 
   return (
@@ -160,7 +103,7 @@ function BurgerConstructor() {
             <ConstructorItem
               item={item}
               isLocked={false}
-              key={uuid()}
+              key={item.uuid}
               moveCard={moveCard}
               index={index}
             />
@@ -176,7 +119,12 @@ function BurgerConstructor() {
         </ul>
       </section>
       <PriceBlock total={totalPrice}>
-        <Button type="primary" size="large" onClick={makeOrder}>
+        <Button
+          type="primary"
+          size="large"
+          disabled={bunItem === null && true}
+          onClick={makeOrder}
+        >
           Оформить заказ
         </Button>
       </PriceBlock>

@@ -1,7 +1,6 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Header } from "../components/header/header";
 import Preloader from "../components/preloader/preloader.js";
 import IngredientDetails from "../components/ingredient-details/ingredient-details.js";
 import styles from "./ingredient.module.scss";
@@ -24,28 +23,23 @@ export function IngredientPage() {
   }
 
   return (
-    <div className="app">
-      <Header />
-      <main>
-        {itemsFailed ? (
-          <div className="text text_type_main-large mt-10 mb-5">
-            Ошибка при загрузке данных.
-          </div>
-        ) : itemsRequest ? (
-          <Preloader />
-        ) : (
-          <div className={`${styles.page_container} pl-4 pr-4 pt-15`}>
-            <h1 className="text text_type_main-large mb-6">
-              Детали ингредиента
-            </h1>
-            {ingredient && (
-              <IngredientDetails
-                item={items.find((item) => item._id === ingredientId)}
-              />
-            )}
-          </div>
-        )}
-      </main>
-    </div>
+    <>
+      {itemsFailed ? (
+        <div className="text text_type_main-large mt-10 mb-5">
+          Ошибка при загрузке данных.
+        </div>
+      ) : itemsRequest ? (
+        <Preloader />
+      ) : (
+        <div className={`${styles.page_container} pl-4 pr-4 pt-15`}>
+          <h1 className="text text_type_main-large mb-6">Детали ингредиента</h1>
+          {ingredient && (
+            <IngredientDetails
+              item={items.find((item) => item._id === ingredientId)}
+            />
+          )}
+        </div>
+      )}
+    </>
   );
 }

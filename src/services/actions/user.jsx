@@ -1,4 +1,9 @@
-import { setCookie, getCookie, deleteCookie } from "../../utils/utils";
+import {
+  checkResponse,
+  setCookie,
+  getCookie,
+  deleteCookie,
+} from "../../utils/utils";
 import { baseUrl } from "../../utils/api";
 
 export const GET_USER_REQUEST = "USER/GET_REQUEST";
@@ -51,6 +56,167 @@ const apiUrls = {
   userData: `${baseUrl}/auth/user`,
 };
 
+function getUserRequest() {
+  return {
+    type: GET_USER_REQUEST,
+  };
+}
+
+function getUserSuccess(user) {
+  return {
+    type: GET_USER_SUCCESS,
+    user: user,
+  };
+}
+
+function getUserFailed() {
+  return {
+    type: GET_USER_FAILED,
+  };
+}
+
+function updateUserRequest() {
+  return {
+    type: UPDATE_USER_REQUEST,
+  };
+}
+
+function updateUserSuccess(user) {
+  return {
+    type: UPDATE_USER_SUCCESS,
+    user: user,
+  };
+}
+
+function updateUserFailed() {
+  return {
+    type: UPDATE_USER_FAILED,
+  };
+}
+
+function clearUserData() {
+  return {
+    type: CLEAR_USER_DATA,
+  };
+}
+
+export function autheticateUser() {
+  return {
+    type: AUTHENTICATE_USER,
+  };
+}
+
+export function unautheticateUser() {
+  return {
+    type: UNAUTHENTICATE_USER,
+  };
+}
+
+function getLoginRequest() {
+  return {
+    type: GET_LOGIN_REQUEST,
+  };
+}
+
+function getLoginSuccess(user) {
+  return {
+    type: GET_LOGIN_SUCCESS,
+    user: user,
+  };
+}
+
+function getLoginFailed() {
+  return {
+    type: GET_LOGIN_FAILED,
+  };
+}
+
+function getLogoutRequest() {
+  return {
+    type: GET_LOGOUT_REQUEST,
+  };
+}
+
+function getLogoutSuccess() {
+  return {
+    type: GET_LOGOUT_SUCCESS,
+  };
+}
+
+function getLogoutFailed() {
+  return {
+    type: GET_LOGOUT_FAILED,
+  };
+}
+
+function getRegistrationRequest() {
+  return {
+    type: GET_REGISTRATION_REQUEST,
+  };
+}
+
+function getRegistrationSuccess(user) {
+  return {
+    type: GET_REGISTRATION_SUCCESS,
+    user: user,
+  };
+}
+
+function getRegistrationFailed() {
+  return {
+    type: GET_REGISTRATION_FAILED,
+  };
+}
+
+function getForgotPasswordRequest() {
+  return {
+    type: GET_FORGOT_PASSWORD_REQUEST,
+  };
+}
+
+function getForgotPasswordSuccess() {
+  return {
+    type: GET_FORGOT_PASSWORD_SUCCESS,
+  };
+}
+
+function getForgotPasswordFailed() {
+  return {
+    type: GET_FORGOT_PASSWORD_SUCCESS,
+  };
+}
+
+function isPasswordRequested() {
+  return {
+    type: IS_PASSWORD_REQUESTED,
+  };
+}
+
+function getResetPasswordRequest() {
+  return {
+    type: GET_RESET_PASSWORD_REQUEST,
+  };
+}
+
+function getResetPasswordSuccess(user) {
+  return {
+    type: GET_RESET_PASSWORD_SUCCESS,
+    user: user,
+  };
+}
+
+function getResetPasswordFailed() {
+  return {
+    type: GET_RESET_PASSWORD_FAILED,
+  };
+}
+
+function isPasswordReseted() {
+  return {
+    type: IS_PASSWORD_RESETED,
+  };
+}
+
 export function tokenRequest() {
   const refreshToken = getCookie("refreshToken");
   if (typeof refreshToken === "undefined") return false;
@@ -68,9 +234,7 @@ export function tokenRequest() {
       token: refreshToken,
     }),
   })
-    .then((res) =>
-      res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-    )
+    .then(checkResponse)
     .then((res) => {
       setCookie("accessToken", res.accessToken.split("Bearer ")[1], {
         expires: COOKIE_EXPIRES,
@@ -81,9 +245,7 @@ export function tokenRequest() {
 
 export function loginRequest(form) {
   return function (dispatch) {
-    dispatch({
-      type: GET_LOGIN_REQUEST,
-    });
+    dispatch(getLoginRequest());
     fetch(apiUrls.login, {
       method: "POST",
       mode: "cors",
@@ -96,47 +258,31 @@ export function loginRequest(form) {
       referrerPolicy: "no-referrer",
       body: JSON.stringify(form),
     })
-      .then((res) =>
-        res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-      )
+      .then(checkResponse)
       .then((data) => {
-        let accessToken;
-        accessToken = data.accessToken.split("Bearer ")[1];
+        const accessToken = data.accessToken.split("Bearer ")[1];
         if (data && data.success && accessToken) {
           setCookie("accessToken", data.accessToken.split("Bearer ")[1], {
             expires: COOKIE_EXPIRES,
           });
           data.refreshToken && setCookie("refreshToken", data.refreshToken);
 
-          dispatch({
-            type: GET_LOGIN_SUCCESS,
-            user: data.user,
-          });
-          dispatch({
-            type: AUTHENTICATE_USER,
-          });
+          dispatch(getLoginSuccess(data.user));
+          dispatch(autheticateUser());
         } else {
-          dispatch({
-            type: GET_LOGIN_FAILED,
-          });
-          dispatch({
-            type: UNAUTHENTICATE_USER,
-          });
+          dispatch(getLoginFailed());
+          dispatch(unautheticateUser());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: GET_LOGIN_FAILED,
-        });
+        dispatch(getLoginFailed());
       });
   };
 }
 
 export function logoutRequest(refreshToken) {
   return function (dispatch) {
-    dispatch({
-      type: GET_LOGOUT_REQUEST,
-    });
+    dispatch(getLogoutRequest());
     fetch(apiUrls.logout, {
       method: "POST",
       mode: "cors",
@@ -151,35 +297,25 @@ export function logoutRequest(refreshToken) {
         token: refreshToken,
       }),
     })
-      .then((res) =>
-        res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-      )
+      .then(checkResponse)
       .then((data) => {
         if (data && data.success) {
-          dispatch({
-            type: GET_LOGOUT_SUCCESS,
-          });
+          dispatch(getLogoutSuccess());
           deleteCookie("accessToken");
           deleteCookie("refreshToken");
         } else {
-          dispatch({
-            type: GET_LOGOUT_FAILED,
-          });
+          dispatch(getLogoutFailed());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: GET_LOGOUT_FAILED,
-        });
+        dispatch(getLogoutFailed());
       });
   };
 }
 
 export function registrationRequest(form) {
   return function (dispatch) {
-    dispatch({
-      type: GET_REGISTRATION_REQUEST,
-    });
+    dispatch(getRegistrationRequest());
     fetch(apiUrls.register, {
       method: "POST",
       mode: "cors",
@@ -192,46 +328,30 @@ export function registrationRequest(form) {
       referrerPolicy: "no-referrer",
       body: JSON.stringify(form),
     })
-      .then((res) =>
-        res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-      )
+      .then(checkResponse)
       .then((data) => {
-        let accessToken;
-        accessToken = data.accessToken.split("Bearer ")[1];
+        const accessToken = data.accessToken.split("Bearer ")[1];
         if (data && data.success && accessToken) {
           setCookie("accessToken", data.accessToken.split("Bearer ")[1], {
             expires: COOKIE_EXPIRES,
           });
           data.refreshToken && setCookie("refreshToken", data.refreshToken);
-          dispatch({
-            type: GET_REGISTRATION_SUCCESS,
-            user: data.user,
-          });
-          dispatch({
-            type: AUTHENTICATE_USER,
-          });
+          dispatch(getRegistrationSuccess(data.user));
+          dispatch(autheticateUser());
         } else {
-          dispatch({
-            type: GET_REGISTRATION_FAILED,
-          });
-          dispatch({
-            type: UNAUTHENTICATE_USER,
-          });
+          dispatch(getRegistrationFailed());
+          dispatch(unautheticateUser());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: GET_REGISTRATION_FAILED,
-        });
+        dispatch(getRegistrationFailed());
       });
   };
 }
 
 export function passwordForgotRequest(form) {
   return function (dispatch) {
-    dispatch({
-      type: GET_RESET_PASSWORD_REQUEST,
-    });
+    dispatch(getForgotPasswordRequest());
     fetch(apiUrls.forgotPassword, {
       method: "POST",
       mode: "cors",
@@ -246,33 +366,23 @@ export function passwordForgotRequest(form) {
       redirect: "follow",
       referrerPolicy: "no-referrer",
     })
-      .then((res) =>
-        res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-      )
+      .then(checkResponse)
       .then((data) => {
         if (data && data.success) {
-          dispatch({
-            type: GET_FORGOT_PASSWORD_SUCCESS,
-          });
+          dispatch(getForgotPasswordSuccess());
         } else {
-          dispatch({
-            type: GET_FORGOT_PASSWORD_FAILED,
-          });
+          dispatch(getForgotPasswordFailed());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: GET_FORGOT_PASSWORD_FAILED,
-        });
+        dispatch(getForgotPasswordFailed());
       });
   };
 }
 
 export function resetPasswordRequest(form) {
   return function (dispatch) {
-    dispatch({
-      type: GET_RESET_PASSWORD_REQUEST,
-    });
+    dispatch(getResetPasswordRequest());
     fetch(apiUrls.resetPassword, {
       method: "POST",
       mode: "cors",
@@ -288,34 +398,23 @@ export function resetPasswordRequest(form) {
       redirect: "follow",
       referrerPolicy: "no-referrer",
     })
-      .then((res) =>
-        res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-      )
+      .then(checkResponse)
       .then((data) => {
         if (data && data.success) {
-          dispatch({
-            type: GET_RESET_PASSWORD_SUCCESS,
-            user: data.data,
-          });
+          dispatch(getResetPasswordSuccess(data.data));
         } else {
-          dispatch({
-            type: GET_RESET_PASSWORD_FAILED,
-          });
+          dispatch(getResetPasswordFailed());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: GET_RESET_PASSWORD_FAILED,
-        });
+        dispatch(getResetPasswordFailed());
       });
   };
 }
 
 export function getUserDataRequest() {
   return async function (dispatch) {
-    dispatch({
-      type: GET_USER_REQUEST,
-    });
+    dispatch(getUserRequest());
 
     if (typeof getCookie("accessToken") === "undefined") {
       await tokenRequest();
@@ -333,34 +432,23 @@ export function getUserDataRequest() {
       redirect: "follow",
       referrerPolicy: "no-referrer",
     })
-      .then((res) =>
-        res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-      )
+      .then(checkResponse)
       .then((data) => {
         if (data && data.success) {
-          dispatch({
-            type: GET_USER_SUCCESS,
-            user: data.user,
-          });
+          dispatch(getUserSuccess(data.user));
         } else {
-          dispatch({
-            type: GET_USER_FAILED,
-          });
+          dispatch(getUserFailed());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: GET_USER_FAILED,
-        });
+        dispatch(getUserFailed());
       });
   };
 }
 
 export function updateUserDataRequest(form) {
   return async function (dispatch) {
-    dispatch({
-      type: GET_USER_REQUEST,
-    });
+    dispatch(getUserRequest());
 
     if (typeof getCookie("accessToken") === "undefined") {
       await tokenRequest();
@@ -379,25 +467,16 @@ export function updateUserDataRequest(form) {
       redirect: "follow",
       referrerPolicy: "no-referrer",
     })
-      .then((res) =>
-        res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
-      )
+      .then(checkResponse)
       .then((data) => {
         if (data && data.success) {
-          dispatch({
-            type: UPDATE_USER_SUCCESS,
-            user: data.user,
-          });
+          dispatch(updateUserSuccess(data.user));
         } else {
-          dispatch({
-            type: UPDATE_USER_FAILED,
-          });
+          dispatch(updateUserFailed());
         }
       })
       .catch((err) => {
-        dispatch({
-          type: UPDATE_USER_FAILED,
-        });
+        dispatch(updateUserFailed());
       });
   };
 }

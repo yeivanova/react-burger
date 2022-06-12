@@ -1,5 +1,4 @@
 import React from "react";
-import { Header } from "../components/header/header";
 import BurgerIngredients from "../components/burger-ingredients/burger-ingredients.js";
 import BurgerConstructor from "../components/burger-constructor/burger-constructor.js";
 import Preloader from "../components/preloader/preloader.js";
@@ -13,28 +12,25 @@ export function HomePage() {
   }));
 
   return (
-    <div className={`${styles.app}`}>
-      <Header />
-      <main>
-        <div className={`${styles.page_container} pl-4 pr-4`}>
-          {itemsFailed ? (
-            <div className="text text_type_main-large mt-10 mb-5">
-              Ошибка при загрузке данных.
+    <>
+      <div className={`${styles.page_container} pl-4 pr-4`}>
+        {itemsFailed ? (
+          <div className="text text_type_main-large mt-10 mb-5">
+            Ошибка при загрузке данных.
+          </div>
+        ) : itemsRequest ? (
+          <Preloader />
+        ) : (
+          <>
+            <div className={`${styles.column} pb-10`}>
+              <BurgerIngredients />
             </div>
-          ) : itemsRequest ? (
-            <Preloader />
-          ) : (
-            <>
-              <div className={`${styles.column} pb-10`}>
-                <BurgerIngredients />
-              </div>
-              <div className={`${styles.column} pb-10`}>
-                <BurgerConstructor />
-              </div>
-            </>
-          )}
-        </div>
-      </main>
-    </div>
+            <div className={`${styles.column} pb-10`}>
+              <BurgerConstructor />
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }

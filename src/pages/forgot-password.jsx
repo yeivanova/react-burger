@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Header } from "../components/header/header";
 import {
   Input,
   Button,
@@ -54,36 +53,31 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <div className="app">
-      <Header />
-      <main>
-        <div className="page_container pl-4 pr-4">
-          <form className="form">
-            <h1 className="text text_type_main-medium mb-6">
-              Восстановление пароля
-            </h1>
-            <Input
-              type={"email"}
-              placeholder={"Email"}
-              onChange={onChange}
-              value={form.email}
-              name={"email"}
-              error={false}
-              errorText={"Ошибка"}
-            />
+    <div className="page_container pl-4 pr-4">
+      <form className="form" onSubmit={forgot}>
+        <h1 className="text text_type_main-medium mb-6">
+          Восстановление пароля
+        </h1>
+        <Input
+          type={"email"}
+          placeholder={"Email"}
+          onChange={onChange}
+          value={form.email}
+          name={"email"}
+          error={false}
+          errorText={"Ошибка"}
+        />
 
-            <Button type="primary" size="large" onClick={forgot}>
-              Восстановить
-            </Button>
-            <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
-              Вспомнили пароль?&nbsp;
-              <Link to={{ pathname: "/login" }} className="link">
-                Войти
-              </Link>
-            </p>
-          </form>
-        </div>
-      </main>
+        <Button type="primary" size="large">
+          Восстановить
+        </Button>
+        <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
+          Вспомнили пароль?&nbsp;
+          <Link to={{ pathname: "/login" }} className="link">
+            Войти
+          </Link>
+        </p>
+      </form>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import styles from "./profile.module.scss";
-import { Header } from "../components/header/header";
 import { ProfileMenu } from "../components/profile-menu/profile-menu";
 import {
   Input,
@@ -77,82 +76,77 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="app">
-      <Header />
-      <main>
-        <div className={`${styles.page_container} pt-30 pl-4 pr-4`}>
-          <ProfileMenu />
-          <div className={styles.column}>
-            <form className={`form ${styles.form}`} onSubmit={onSubmit}>
-              <Input
-                placeholder="Имя"
-                value={form["name"] ?? ""}
-                name="name"
-                icon="EditIcon"
-                ref={inputNameRef}
-                onIconClick={() => {
-                  setDisabled(false);
-                  setTimeout(() => inputNameRef.current?.focus(), 0);
-                }}
-                onChange={onChange}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                disabled={fieldDisabled}
-              />
+    <div className={`${styles.page_container} pt-30 pl-4 pr-4`}>
+      <ProfileMenu />
+      <div className={styles.column}>
+        <form className={`form ${styles.form}`} onSubmit={onSubmit}>
+          <Input
+            placeholder="Имя"
+            value={form["name"] ?? ""}
+            name="name"
+            icon="EditIcon"
+            ref={inputNameRef}
+            onIconClick={() => {
+              setDisabled(false);
+              setTimeout(() => inputNameRef.current?.focus(), 0);
+            }}
+            onChange={onChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            disabled={fieldDisabled}
+          />
 
-              <Input
-                placeholder="Логин"
-                value={form["email"] ?? ""}
-                name="email"
-                errorText={"Проверьте формат email-адреса"}
-                icon="EditIcon"
-                ref={inputEmailRef}
-                onIconClick={() => {
-                  setDisabled(false);
-                  setTimeout(() => inputEmailRef.current?.focus(), 0);
-                }}
-                onChange={onChange}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                disabled={fieldDisabled}
-              />
+          <Input
+            placeholder="Логин"
+            value={form["email"] ?? ""}
+            name="email"
+            errorText={"Проверьте формат email-адреса"}
+            icon="EditIcon"
+            ref={inputEmailRef}
+            onIconClick={() => {
+              setDisabled(false);
+              setTimeout(() => inputEmailRef.current?.focus(), 0);
+            }}
+            onChange={onChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            disabled={fieldDisabled}
+          />
 
-              <Input
-                type="password"
-                placeholder="Пароль"
-                value={form["password"] ?? ""}
-                name={"password"}
-                icon="EditIcon"
-                ref={inputPasswordRef}
-                onIconClick={() => {
-                  setDisabled(false);
-                  setTimeout(() => inputPasswordRef.current?.focus(), 0);
-                }}
-                onChange={onChange}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                disabled={fieldDisabled}
-              />
+          <Input
+            type="password"
+            placeholder="Пароль"
+            value={form["password"] ?? ""}
+            name={"password"}
+            icon="EditIcon"
+            ref={inputPasswordRef}
+            onIconClick={() => {
+              setDisabled(false);
+              setTimeout(() => inputPasswordRef.current?.focus(), 0);
+            }}
+            onChange={onChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            disabled={fieldDisabled}
+          />
 
-              {showButtons ? (
-                <div className={`${styles.button_row} mt-5`}>
-                  <Button type="primary" size="medium" htmlType="submit">
-                    Сохранить
-                  </Button>
-                  <Button
-                    type="secondary"
-                    size="medium"
-                    htmlType="button"
-                    onClick={onCancel}
-                  >
-                    Отмена
-                  </Button>
-                </div>
-              ) : null}
-            </form>
-          </div>
-        </div>
-      </main>
+          {showButtons ? (
+            <div className={`${styles.button_row} mt-5`}>
+              <Button type="primary" size="medium">
+                Сохранить
+              </Button>
+              <Button
+                type="secondary"
+                size="medium"
+                htmlType="button"
+                onClick={onCancel}
+              >
+                Отмена
+              </Button>
+            </div>
+          ) : null}
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,10 @@
+export function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(res.statusText);
+}
+
 export function getCookie(name) {
   const matches = document.cookie.match(
     new RegExp(

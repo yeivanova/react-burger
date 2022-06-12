@@ -4,7 +4,7 @@ import IngredientItem from "../ingredient-item/ingredient-item.js";
 import styles from "./burger-ingredients.module.scss";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
-import { CHANGE_TAB } from "../../services/actions/ingredients.jsx";
+import { changeTab } from "../../services/actions/ingredients.jsx";
 
 function BurgerIngredients() {
   const { items, currentTab, cartItems, bunItem } = useSelector((store) => ({
@@ -46,10 +46,7 @@ function BurgerIngredients() {
   const mainRef = useRef(null);
 
   const executeScroll = (ref) => (e) => {
-    dispatch({
-      type: CHANGE_TAB,
-      currentTab: e,
-    });
+    dispatch(changeTab(e));
 
     if (ref && ref.current) {
       ref.current.scrollIntoView({
@@ -65,20 +62,11 @@ function BurgerIngredients() {
 
   const scrollIngredients = () => {
     if (isInViewport(bunRef.current)) {
-      dispatch({
-        type: CHANGE_TAB,
-        currentTab: "bun",
-      });
+      dispatch(changeTab("bun"));
     } else if (isInViewport(sauceRef.current)) {
-      dispatch({
-        type: CHANGE_TAB,
-        currentTab: "sauce",
-      });
+      dispatch(changeTab("sauce"));
     } else if (isInViewport(mainRef.current)) {
-      dispatch({
-        type: CHANGE_TAB,
-        currentTab: "main",
-      });
+      dispatch(changeTab("main"));
     }
   };
 
