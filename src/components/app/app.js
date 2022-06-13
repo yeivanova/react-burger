@@ -1,54 +1,110 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
-import styles from "./app.module.scss";
-import Header from "../header/header.js";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients.js";
-import BurgerConstructor from "../burger-constructor/burger-constructor.js";
-import Preloader from "../preloader/preloader.js";
+import { getCookie } from "../../utils/utils";
 import { useDispatch, useSelector } from "react-redux";
+import { getUserDataRequest } from "../../services/actions/user";
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  useLocation,
+  useHistory,
+} from "react-router-dom";
+import { ProtectedRoute } from "../protected-route/protected-route";
+import {
+  HomePage,
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  ProfilePage,
+  IngredientPage,
+  OrdersPage,
+  NotFoundPage,
+} from "../../pages";
+import { Header } from "../header/header";
+import Modal from "../modal/modal.js";
+import IngredientDetails from "../ingredient-details/ingredient-details.js";
 import { loadData } from "../../services/actions/ingredients";
 
-function App() {
-  const { itemsRequest, itemsFailed } = useSelector((store) => ({
-    itemsRequest: store.ingredients.itemsRequest,
-    itemsFailed: store.ingredients.itemsFailed,
+function Main() {
+  const { isAuthenticated } = useSelector((store) => ({
+    isAuthenticated: store.user.isAuthenticated,
   }));
 
   const dispatch = useDispatch();
 
+  const initUser = () => {
+    const refreshToken = getCookie("refreshToken");
+    if (isAuthenticated) {
+      dispatch(getUserDataRequest(refreshToken));
+    }
+  };
+
   useEffect(() => {
+    initUser();
     dispatch(loadData());
   }, [dispatch]);
 
+  const location = useLocation();
+  const history = useHistory();
+
+  const isModal = location.state && location.state.isModal;
+  const closeModal = () => history.goBack();
   return (
-    <div className={`${styles.app}`}>
+    <div className="app">
       <Header />
       <main>
-        <div className={`${styles.page_container} pl-4 pr-4`}>
-          {itemsFailed ? (
-            <div className="text text_type_main-large mt-10 mb-5">
-              Ошибка при загрузке данных.
-            </div>
-          ) : itemsRequest ? (
-            <Preloader />
-          ) : (
-            <>
-              <div className={`${styles.column} pb-10`}>
-                <BurgerIngredients />
-              </div>
-              <div className={`${styles.column} pb-10`}>
-                <BurgerConstructor />
-              </div>
-            </>
-          )}
-        </div>
+        <Switch location={isModal || location}>
+          <Route path="/" exact={true}>
+            <HomePage />
+          </Route>
+          <Route path="/login" exact={true}>
+            <LoginPage />
+          </Route>
+          <Route path="/register" exact={true}>
+            <RegisterPage />
+          </Route>
+          <Route path="/forgot-password" exact={true}>
+            <ForgotPasswordPage />
+          </Route>
+          <Route path="/reset-password" exact={true}>
+            <ResetPasswordPage />
+          </Route>
+          <ProtectedRoute path="/profile" exact={true}>
+            <ProfilePage />
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile/*">
+            <OrdersPage />
+          </ProtectedRoute>
+          <Route path="/ingredients/:id" exact={true}>
+            <IngredientPage />
+          </Route>
+          <Route>
+            <NotFoundPage />
+          </Route>
+        </Switch>
+        {isModal && (
+          <Route path="/ingredients/:id" exact={true}>
+            <Modal
+              isModal={isModal}
+              closeMe={closeModal}
+              title={"Детали ингредиента"}
+            >
+              <IngredientDetails />
+            </Modal>
+          </Route>
+        )}
       </main>
     </div>
   );
 }
 
-App.propTypes = {
-  error: PropTypes.string,
-};
+function App() {
+  return (
+    <BrowserRouter>
+      <Main />
+    </BrowserRouter>
+  );
+}
 
 export default App;

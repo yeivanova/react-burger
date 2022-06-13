@@ -1,42 +1,30 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import IngredientSection from "../ingredient-section/ingredient-section.js";
 import IngredientItem from "../ingredient-item/ingredient-item.js";
-import IngredientDetails from "../ingredient-details/ingredient-details.js";
-import Modal from "../modal/modal.js";
 import styles from "./burger-ingredients.module.scss";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
-import { CHANGE_TAB } from "../../services/actions/ingredients.jsx";
-import {
-  SET_VIEWED_INGREDIENT,
-  CLEAR_VIEWED_INGREDIENT,
-} from "../../services/actions/viewed-ingredient.jsx";
+import { changeTab } from "../../services/actions/ingredients.jsx";
 
 function BurgerIngredients() {
-  const { items, currentTab, viewedIngredient } = useSelector((store) => ({
+  const { items, currentTab, cartItems, bunItem } = useSelector((store) => ({
     items: store.ingredients.items,
     currentTab: store.currentTab.currentTab,
-    viewedIngredient: store.viewedIngredient.viewedIngredient,
+    cartItems: store.cartItems.cartItems,
+    bunItem: store.cartItems.bunItem,
   }));
 
   const dispatch = useDispatch();
-  const [displayModal, setDisplayModal] = useState(false);
 
-  const openModal = (e) => {
-    setDisplayModal(true);
-    dispatch({
-      type: SET_VIEWED_INGREDIENT,
-      viewedIngredient: e.currentTarget.id,
+  const ingredientsCounter = useMemo(() => {
+    const counter = {};
+    cartItems.forEach((el) => {
+      if (!counter[el._id]) counter[el._id] = 0;
+      counter[el._id]++;
     });
-  };
-
-  const closeModal = () => {
-    setDisplayModal(false);
-    dispatch({
-      type: CLEAR_VIEWED_INGREDIENT,
-      viewedIngredient: [],
-    });
-  };
+    if (bunItem) counter[bunItem._id] = 2;
+    return counter;
+  }, [cartItems, bunItem]);
 
   const buns = useMemo(
     () => items.filter((item) => item.type === "bun"),
@@ -58,10 +46,7 @@ function BurgerIngredients() {
   const mainRef = useRef(null);
 
   const executeScroll = (ref) => (e) => {
-    dispatch({
-      type: CHANGE_TAB,
-      currentTab: e,
-    });
+    dispatch(changeTab(e));
 
     if (ref && ref.current) {
       ref.current.scrollIntoView({
@@ -77,20 +62,11 @@ function BurgerIngredients() {
 
   const scrollIngredients = () => {
     if (isInViewport(bunRef.current)) {
-      dispatch({
-        type: CHANGE_TAB,
-        currentTab: "bun",
-      });
+      dispatch(changeTab("bun"));
     } else if (isInViewport(sauceRef.current)) {
-      dispatch({
-        type: CHANGE_TAB,
-        currentTab: "sauce",
-      });
+      dispatch(changeTab("sauce"));
     } else if (isInViewport(mainRef.current)) {
-      dispatch({
-        type: CHANGE_TAB,
-        currentTab: "main",
-      });
+      dispatch(changeTab("main"));
     }
   };
 
@@ -132,7 +108,7 @@ function BurgerIngredients() {
               <IngredientItem
                 item={item}
                 key={item._id}
-                customClickEvent={openModal}
+                count={ingredientsCounter[item._id]}
               />
             ))}
           </IngredientSection>
@@ -143,7 +119,7 @@ function BurgerIngredients() {
               <IngredientItem
                 item={item}
                 key={item._id}
-                customClickEvent={openModal}
+                count={ingredientsCounter[item._id]}
               />
             ))}
           </IngredientSection>
@@ -154,19 +130,12 @@ function BurgerIngredients() {
               <IngredientItem
                 item={item}
                 key={item._id}
-                customClickEvent={openModal}
+                count={ingredientsCounter[item._id]}
               />
             ))}
           </IngredientSection>
         </div>
       </div>
-      {displayModal && (
-        <Modal closeMe={closeModal} title={"Детали ингредиента"}>
-          <IngredientDetails
-            item={items.find((item) => item._id === viewedIngredient)}
-          />
-        </Modal>
-      )}
     </>
   );
 }

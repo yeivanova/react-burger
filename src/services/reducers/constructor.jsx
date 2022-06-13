@@ -3,15 +3,23 @@ import {
   DELETE_ITEM,
   SET_BUN,
   SORT_ITEMS,
+  CART_RESET,
 } from "../actions/constructor";
 
 const cartInitialState = {
   cartItems: [],
-  bunItem: [],
+  bunItem: null,
 };
 
 export const constructorReducer = (state = cartInitialState, action) => {
   switch (action.type) {
+    case CART_RESET: {
+      return {
+        ...state,
+        cartItems: [],
+        bunItem: null,
+      };
+    }
     case ADD_ITEM: {
       return {
         ...state,

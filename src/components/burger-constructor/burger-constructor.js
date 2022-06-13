@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import uuid from "react-uuid";
 import styles from "./burger-constructor.module.scss";
 import ConstructorItem from "../constructor-item/constructor-item.js";
@@ -10,61 +10,36 @@ import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 import {
-  ADD_ITEM,
-  SET_BUN,
-  SORT_ITEMS,
+  addItem,
+  setBun,
+  sortItems,
+  cartReset,
 } from "../../services/actions/constructor";
-import { getOrder, NUMBER_RESET } from "../../services/actions/order";
-
-const totalInitialState = { total: 0 };
-
-function totalReducer(state, action) {
-  switch (action.type) {
-    case "set":
-      let bunPrice =
-        action.payload.bunItem.length !== 0
-          ? action.payload.bunItem.price * 2
-          : 0;
-      let total = bunPrice;
-      action.payload.cartItems.forEach((el) => {
-        total = total + el.price;
-      });
-
-      return {
-        total: total,
-      };
-    case "reset":
-      return totalInitialState;
-    default:
-      throw new Error(`Неверный тип действия: ${action.type}`);
-  }
-}
+import { getOrder, numberReset } from "../../services/actions/order";
+import { useHistory, useLocation } from "react-router-dom";
 
 function BurgerConstructor() {
-  const [totalState, totalStateDispatcher] = useReducer(
-    totalReducer,
-    totalInitialState,
-    undefined
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const { cartItems, bunItem, number, isAuthenticated } = useSelector(
+    (store) => ({
+      cartItems: store.cartItems.cartItems,
+      bunItem: store.cartItems.bunItem,
+      number: store.order.number,
+      isAuthenticated: store.user.isAuthenticated,
+    })
   );
 
-  const dispatch = useDispatch();
-  const { cartItems, bunItem, number } = useSelector((store) => ({
-    cartItems: store.cartItems.cartItems,
-    bunItem: store.cartItems.bunItem,
-    number: store.order.number,
-  }));
+  const totalPrice = useMemo(() => {
+    return (
+      (bunItem !== null ? bunItem.price * 2 : 0) +
+      cartItems.reduce((sum, val) => sum + val.price, 0)
+    );
+  }, [bunItem, cartItems]);
 
   const moveItem = (item) => {
-    item.item.cartItemId = uuid();
-    item.item.type === "bun"
-      ? dispatch({
-          type: SET_BUN,
-          ...item,
-        })
-      : dispatch({
-          type: ADD_ITEM,
-          ...item,
-        });
+    item.item.type === "bun" ? dispatch(setBun(item)) : dispatch(addItem(item));
   };
 
   const [{ isHover }, dropTarget] = useDrop({
@@ -80,43 +55,31 @@ function BurgerConstructor() {
   const [displayModal, setDisplayModal] = useState(false);
   const [error] = useState();
 
-  useEffect(() => {
-    totalStateDispatcher({
-      type: "set",
-      payload: {
-        bunItem: bunItem,
-        cartItems: cartItems,
-      },
-    });
-  }, [totalStateDispatcher, bunItem, cartItems]);
-
   const openModal = () => {
     setDisplayModal(true);
   };
 
   const closeModal = () => {
     setDisplayModal(false);
-    dispatch({
-      type: NUMBER_RESET,
-    });
+    dispatch(numberReset());
+    dispatch(cartReset());
   };
 
   const makeOrder = () => {
-    let orderContent = [...cartItems.map((item) => item._id), bunItem._id];
-    if (typeof bunItem._id !== "undefined") {
-      dispatch(getOrder(orderContent));
-      openModal();
-    } else alert("Выберите булку!");
+    if (!isAuthenticated) {
+      history.replace({ pathname: `/login` });
+      return;
+    }
+    const orderContent = [...cartItems.map((item) => item._id), bunItem._id];
+    dispatch(getOrder(orderContent));
+    openModal();
   };
 
   const moveCard = (dragIndex, hoverIndex) => {
     const changedCartItems = cartItems.slice();
     changedCartItems.splice(dragIndex, 1);
     changedCartItems.splice(hoverIndex, 0, cartItems[dragIndex]);
-    dispatch({
-      type: SORT_ITEMS,
-      cartItems: changedCartItems,
-    });
+    dispatch(sortItems(changedCartItems));
   };
 
   return (
@@ -128,7 +91,7 @@ function BurgerConstructor() {
           } `}
           ref={dropTarget}
         >
-          {bunItem.length !== 0 && (
+          {bunItem !== null && (
             <ConstructorItem
               item={bunItem}
               key={uuid()}
@@ -140,12 +103,12 @@ function BurgerConstructor() {
             <ConstructorItem
               item={item}
               isLocked={false}
-              key={uuid()}
+              key={item.uuid}
               moveCard={moveCard}
               index={index}
             />
           ))}
-          {bunItem.length !== 0 && (
+          {bunItem !== null && (
             <ConstructorItem
               item={bunItem}
               key={uuid()}
@@ -155,8 +118,13 @@ function BurgerConstructor() {
           )}
         </ul>
       </section>
-      <PriceBlock total={totalState.total}>
-        <Button type="primary" size="large" onClick={makeOrder}>
+      <PriceBlock total={totalPrice}>
+        <Button
+          type="primary"
+          size="large"
+          disabled={bunItem === null && true}
+          onClick={makeOrder}
+        >
           Оформить заказ
         </Button>
       </PriceBlock>
