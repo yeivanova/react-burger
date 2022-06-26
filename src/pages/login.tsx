@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, FormEvent, useCallback } from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
@@ -23,7 +23,7 @@ export const LoginPage: FC = () => {
   const location = useLocation<TLocationState>();
 
   const login = useCallback(
-    (e) => {
+    (e: FormEvent) => {
       e.preventDefault();
       dispatch<any>(
         loginRequest(values as { email: string; password: string })

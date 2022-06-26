@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, FormEvent, useCallback } from "react";
 import { Link, Redirect } from "react-router-dom";
 import {
   Input,
@@ -18,7 +18,7 @@ export const RegisterPage: FC = () => {
   const dispatch = useDispatch();
 
   const register = useCallback(
-    (e) => {
+    (e: FormEvent) => {
       e.preventDefault();
       dispatch<any>(
         registrationRequest(

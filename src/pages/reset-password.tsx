@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, FormEvent, useCallback } from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
@@ -14,7 +14,7 @@ import { resetPasswordRequest } from "../utils/api";
 import { useFormAndValidation } from "../hooks/useFormAndValidation";
 import { TLocationState } from "../services/types/data";
 
-export function ResetPasswordPage() {
+export const ResetPasswordPage: FC = () => {
   const { isTokenRequested, isAuthenticated, isPasswordReseted } = useSelector(
     (store: any) => ({
       isTokenRequested: store.user.forgotPassword.isTokenRequested,
@@ -29,7 +29,7 @@ export function ResetPasswordPage() {
   const location = useLocation<TLocationState>();
 
   const reset = useCallback(
-    (e) => {
+    (e: FormEvent) => {
       e.preventDefault();
       dispatch<any>(
         resetPasswordRequest(values as { password: string; token: string })
@@ -90,4 +90,4 @@ export function ResetPasswordPage() {
       </form>
     </div>
   );
-}
+};
