@@ -1,12 +1,14 @@
-import React from "react";
-import BurgerIngredients from "../components/burger-ingredients/burger-ingredients.js";
-import BurgerConstructor from "../components/burger-constructor/burger-constructor.js";
-import Preloader from "../components/preloader/preloader.js";
+import React, { FC } from "react";
+import { BurgerIngredients } from "../components/burger-ingredients/burger-ingredients";
+import { BurgerConstructor } from "../components/burger-constructor/burger-constructor";
+import { Preloader } from "../components/preloader/preloader";
 import styles from "./home.module.scss";
 import { useSelector } from "react-redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-export function HomePage() {
-  const { itemsRequest, itemsFailed } = useSelector((store) => ({
+export const HomePage: FC = () => {
+  const { itemsRequest, itemsFailed } = useSelector((store: any) => ({
     itemsRequest: store.ingredients.itemsRequest,
     itemsFailed: store.ingredients.itemsFailed,
   }));
@@ -21,16 +23,16 @@ export function HomePage() {
         ) : itemsRequest ? (
           <Preloader />
         ) : (
-          <>
+          <DndProvider backend={HTML5Backend}>
             <div className={`${styles.column} pb-10`}>
               <BurgerIngredients />
             </div>
             <div className={`${styles.column} pb-10`}>
               <BurgerConstructor />
             </div>
-          </>
+          </DndProvider>
         )}
       </div>
     </>
   );
-}
+};

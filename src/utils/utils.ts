@@ -1,11 +1,11 @@
-export function checkResponse(res) {
+export function checkResponse(res: Response): Promise<any> {
   if (res.ok) {
     return res.json();
   }
-  return Promise.reject(res.statusText);
+  return res.json().then((err: any) => Promise.reject(err));
 }
 
-export function getCookie(name) {
+export function getCookie(name: string) {
   const matches = document.cookie.match(
     new RegExp(
       "(?:^|; )" +
@@ -16,8 +16,11 @@ export function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-export function setCookie(name, value, props) {
-  props = props || {};
+export function setCookie(name: string, value: string, props?: any | null) {
+  props = {
+    path: "/",
+    ...props,
+  };
   let exp = props.expires;
   if (typeof exp == "number" && exp) {
     const d = new Date();
@@ -27,6 +30,7 @@ export function setCookie(name, value, props) {
   if (exp && exp.toUTCString) {
     props.expires = exp.toUTCString();
   }
+
   value = encodeURIComponent(value);
   let updatedCookie = name + "=" + value;
   for (const propName in props) {
@@ -39,6 +43,6 @@ export function setCookie(name, value, props) {
   document.cookie = updatedCookie;
 }
 
-export function deleteCookie(name) {
-  setCookie(name, null, { expires: -1 });
+export function deleteCookie(name: string) {
+  setCookie(name, "", { expires: -1 });
 }

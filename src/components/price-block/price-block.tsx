@@ -1,9 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { FC } from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./price-block.module.scss";
 
-function PriceBlock({ total, children }) {
+type TPriceBlockProps = {
+  total: number;
+  children: JSX.Element | JSX.Element[];
+};
+
+export const PriceBlock: FC<TPriceBlockProps> = ({ total, children }) => {
   return (
     <section className={`${styles.price_block}`}>
       <div className={`${styles.price} text text_type_digits-medium mr-10`}>
@@ -12,11 +16,4 @@ function PriceBlock({ total, children }) {
       {children}
     </section>
   );
-}
-
-PriceBlock.propTypes = {
-  total: PropTypes.number.isRequired,
-  children: PropTypes.object.isRequired,
 };
-
-export default PriceBlock;

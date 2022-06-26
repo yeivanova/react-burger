@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
@@ -8,38 +8,37 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  resetPasswordRequest,
-  IS_PASSWORD_RESETED,
-} from "../services/actions/user";
+import { IS_PASSWORD_RESETED } from "../services/actions/user";
+
+import { resetPasswordRequest } from "../utils/api";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
+import { TLocationState } from "../services/types/data";
 
 export function ResetPasswordPage() {
   const { isTokenRequested, isAuthenticated, isPasswordReseted } = useSelector(
-    (store) => ({
+    (store: any) => ({
       isTokenRequested: store.user.forgotPassword.isTokenRequested,
       isPasswordReseted: store.user.resetPassword.isPasswordReseted,
       isAuthenticated: store.user.isAuthenticated,
     })
   );
 
-  const [form, setValue] = useState({ password: "", token: "" });
+  const { values, handleChange } = useFormAndValidation();
 
   const dispatch = useDispatch();
-  const location = useLocation();
-
-  const onChange = (e) => {
-    setValue({ ...form, [e.target.name]: e.target.value });
-  };
+  const location = useLocation<TLocationState>();
 
   const reset = useCallback(
     (e) => {
       e.preventDefault();
-      dispatch(resetPasswordRequest(form));
+      dispatch<any>(
+        resetPasswordRequest(values as { password: string; token: string })
+      );
       dispatch({
         type: IS_PASSWORD_RESETED,
       });
     },
-    [dispatch, form]
+    [dispatch, values]
   );
 
   if (isPasswordReseted) {
@@ -67,20 +66,19 @@ export function ResetPasswordPage() {
           Восстановление пароля
         </h1>
         <PasswordInput
-          placeholder={"Введите новый пароль"}
-          value={form.password}
+          value={values.password || ""}
           name="password"
-          onChange={onChange}
+          onChange={handleChange}
         />
         <Input
           placeholder="Введите код из письма"
-          value={form.token}
+          value={values.token || ""}
           name="token"
-          onChange={onChange}
+          onChange={handleChange}
           error={false}
           errorText={"Ошибка"}
         />
-        <Button type="primary" size="large">
+        <Button type="primary" size="medium">
           Сохранить
         </Button>
         <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">

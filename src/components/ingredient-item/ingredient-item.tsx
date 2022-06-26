@@ -1,15 +1,24 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { FC, MouseEventHandler } from "react";
 import styles from "./ingredient-item.module.scss";
 import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IngredientPropTypes } from "../../utils/prop-types.js";
 import { Link, useLocation } from "react-router-dom";
 import { useDrag } from "react-dnd";
+import { TIngredient } from "../../services/types/data";
 
-function IngredientItem({ item, customClickEvent, count }) {
+type TProps = {
+  item: TIngredient;
+  customClickEvent?: MouseEventHandler<HTMLLIElement>;
+  count: number;
+};
+
+export const IngredientItem: FC<TProps> = ({
+  item,
+  customClickEvent,
+  count,
+}) => {
   const location = useLocation();
   const [{ dragEffect }, ref] = useDrag({
     type: "items",
@@ -55,11 +64,4 @@ function IngredientItem({ item, customClickEvent, count }) {
       </Link>
     </li>
   );
-}
-
-IngredientItem.propTypes = {
-  item: IngredientPropTypes.isRequired,
-  count: PropTypes.number,
 };
-
-export default React.memo(IngredientItem);

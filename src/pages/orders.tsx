@@ -1,8 +1,8 @@
-import React from "react";
+import React, { FC } from "react";
 import styles from "./profile.module.scss";
 import { ProfileMenu } from "../components/profile-menu/profile-menu";
 
-export function OrdersPage() {
+export const OrdersPage: FC = () => {
   return (
     <div className={`${styles.page_container} pt-30 pl-4 pr-4`}>
       <ProfileMenu />
@@ -14,4 +14,4 @@ export function OrdersPage() {
       </div>
     </div>
   );
-}
+};

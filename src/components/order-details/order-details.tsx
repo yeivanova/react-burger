@@ -1,12 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { FC } from "react";
 import styles from "./order-details.module.scss";
 import doneImg from "../../images/done.png";
-import Preloader from "../preloader/preloader.js";
+import { Preloader } from "../preloader/preloader";
 import { useSelector } from "react-redux";
 
-function OrderDetails({ orderNumber }) {
-  const { numberRequest, numberFailed } = useSelector((store) => ({
+type TOrderDetailsProps = {
+  orderNumber: number;
+};
+
+export const OrderDetails: FC<TOrderDetailsProps> = (orderNumber) => {
+  const { numberRequest, numberFailed } = useSelector((store: any) => ({
     numberRequest: store.order.numberRequest,
     numberFailed: store.order.numberFailed,
   }));
@@ -44,10 +47,4 @@ function OrderDetails({ orderNumber }) {
       )}
     </div>
   );
-}
-
-OrderDetails.propTypes = {
-  orderNumber: PropTypes.number,
 };
-
-export default OrderDetails;

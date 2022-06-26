@@ -1,22 +1,26 @@
-import React, { useCallback, useEffect } from "react";
+import React, { FC, ReactNode, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import ModalOverlay from "../modal-overlay/modal-overlay.js";
+import { ModalOverlay } from "../modal-overlay/modal-overlay";
 import styles from "./modal.module.scss";
 
-const modalRoot = document.getElementById("react-modals");
+const modalRoot = document.getElementById("react-modals") as
+  | Element
+  | DocumentFragment;
 
-function Modal({ closeMe, children, title = "" }) {
-  const closeModal = useCallback(
-    (event) => {
-      closeMe(event);
-    },
-    [closeMe]
-  );
+type TModalProps = {
+  closeMe: () => void;
+  children: ReactNode;
+  title?: string;
+};
+
+export const Modal: FC<TModalProps> = ({ closeMe, children, title = "" }) => {
+  const closeModal = useCallback(() => {
+    closeMe();
+  }, [closeMe]);
 
   useEffect(() => {
-    const close = (e) => {
+    const close = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         closeModal();
       }
@@ -44,12 +48,4 @@ function Modal({ closeMe, children, title = "" }) {
     </>,
     modalRoot
   );
-}
-
-Modal.propTypes = {
-  closeMe: PropTypes.func.isRequired,
-  children: PropTypes.element.isRequired,
-  title: PropTypes.string,
 };
-
-export default Modal;

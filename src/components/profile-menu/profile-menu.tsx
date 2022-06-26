@@ -1,22 +1,22 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback, MouseEvent } from "react";
 import { Redirect, NavLink } from "react-router-dom";
 import styles from "./profile-menu.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutRequest } from "../../services/actions/user";
+import { logoutRequest } from "../../utils/api";
 import { getCookie } from "../../utils/utils";
 import { unautheticateUser } from "../../services/actions/user";
 
-export function ProfileMenu() {
-  const { isAuthenticated } = useSelector((store) => ({
+export const ProfileMenu: FC = () => {
+  const { isAuthenticated } = useSelector((store: any) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
   const dispatch = useDispatch();
 
   const onLogoutClick = useCallback(
-    (e) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      dispatch(logoutRequest(getCookie("refreshToken")));
+      dispatch<any>(logoutRequest(getCookie("refreshToken")));
       dispatch(unautheticateUser());
     },
     [dispatch]
@@ -70,4 +70,4 @@ export function ProfileMenu() {
       </p>
     </aside>
   );
-}
+};

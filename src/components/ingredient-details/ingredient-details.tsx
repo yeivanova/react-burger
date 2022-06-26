@@ -1,16 +1,18 @@
-import React from "react";
+import React, { FC } from "react";
 import styles from "./ingredient-details.module.scss";
-import Preloader from "../preloader/preloader";
+import { Preloader } from "../preloader/preloader";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
-function IngredientDetails() {
-  const { items } = useSelector((store) => ({
+export const IngredientDetails: FC = () => {
+  const { items } = useSelector((store: any) => ({
     items: store.ingredients.items,
   }));
-  
-  const ingredientId = useParams().id;
-  const ingredient = items.find(({ _id }) => _id === ingredientId);
+
+  const ingredientId = useParams<{ id: string }>().id;
+  const ingredient = items.find(
+    (item: { _id: string }) => item._id === ingredientId
+  );
 
   return ingredient ? (
     <div className="pb-15">
@@ -62,6 +64,4 @@ function IngredientDetails() {
   ) : (
     <Preloader />
   );
-}
-
-export default IngredientDetails;
+};

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { FC, useCallback } from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
@@ -8,28 +8,28 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "../services/actions/user";
+import { loginRequest } from "../utils/api";
+import { TLocationState } from "../services/types/data";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
 
-export function LoginPage() {
-  const { isAuthenticated } = useSelector((store) => ({
+export const LoginPage: FC = () => {
+  const { isAuthenticated } = useSelector((store: any) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
-  const [form, setValue] = useState({ email: "", password: "" });
+  const { values, handleChange } = useFormAndValidation();
 
   const dispatch = useDispatch();
-  const location = useLocation();
-
-  const onChange = (e) => {
-    setValue({ ...form, [e.target.name]: e.target.value });
-  };
+  const location = useLocation<TLocationState>();
 
   const login = useCallback(
     (e) => {
       e.preventDefault();
-      dispatch(loginRequest(form));
+      dispatch<any>(
+        loginRequest(values as { email: string; password: string })
+      );
     },
-    [dispatch, form]
+    [dispatch, values]
   );
 
   if (isAuthenticated) {
@@ -43,19 +43,18 @@ export function LoginPage() {
         <Input
           type={"email"}
           placeholder={"Email"}
-          onChange={onChange}
-          value={form.email}
+          onChange={handleChange}
+          value={values.email || ""}
           name={"email"}
           error={false}
           errorText={"Ошибка"}
         />
         <PasswordInput
-          onChange={onChange}
-          placeholder={"Пароль"}
-          value={form.password}
+          onChange={handleChange}
+          value={values.password || ""}
           name={"password"}
         />
-        <Button type="primary" size="large">
+        <Button type="primary" size="medium">
           Войти
         </Button>
         <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
@@ -73,4 +72,4 @@ export function LoginPage() {
       </form>
     </div>
   );
-}
+};
