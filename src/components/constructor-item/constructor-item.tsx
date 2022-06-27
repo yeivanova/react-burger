@@ -1,27 +1,38 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { FC } from "react";
 import styles from "./constructor-item.module.scss";
 import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IngredientPropTypes } from "../../utils/prop-types.js";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { DELETE_ITEM } from "../../services/actions/constructor";
+import { TIngredient } from "../../services/types/data";
 
-function ConstructorItem({
+type TConstructorItemProps = {
+  item: TIngredient;
+  type?: "top" | "bottom" | undefined;
+  isLocked: boolean | undefined;
+  index?: number;
+  moveCard?: (param1: number, param2: number) => void;
+};
+
+interface IDragItem {
+  index: number;
+}
+
+export const ConstructorItem: FC<TConstructorItemProps> = ({
   item,
-  type = "undefined",
-  isLocked = "default",
+  type,
+  isLocked,
   index,
   moveCard,
-}) {
-  const ref = useRef(null);
+}) => {
+  const ref = useRef<HTMLLIElement>(null);
   const dispatch = useDispatch();
 
-  const deleteItem = (e, item) => {
+  const deleteItem = (item: TIngredient) => {
     dispatch({
       type: DELETE_ITEM,
       item,
@@ -35,12 +46,13 @@ function ConstructorItem({
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item, monitor) {
+    hover(drapItem, monitor) {
+      const item = drapItem as IDragItem;
       if (!ref.current) {
         return;
       }
       const dragIndex = item.index;
-      const hoverIndex = index;
+      const hoverIndex: number = index!;
       if (dragIndex === hoverIndex) {
         return;
       }
@@ -50,16 +62,16 @@ function ConstructorItem({
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
 
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
+      if (dragIndex < hoverIndex! && hoverClientY < hoverMiddleY) {
         return;
       }
 
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      if (dragIndex > hoverIndex! && hoverClientY > hoverMiddleY) {
         return;
       }
 
-      moveCard(dragIndex, hoverIndex);
+      moveCard!(dragIndex, hoverIndex);
       item.index = hoverIndex;
     },
   });
@@ -93,19 +105,9 @@ function ConstructorItem({
           thumbnail={item.image}
           type={type}
           isLocked={isLocked}
-          handleClose={(e) => deleteItem(e, item)}
+          handleClose={() => deleteItem(item)}
         />
       </li>
     </>
   );
-}
-
-ConstructorItem.propTypes = {
-  item: IngredientPropTypes.isRequired,
-  type: PropTypes.string,
-  isLocked: PropTypes.bool.isRequired,
-  index: PropTypes.number,
-  moveCard: PropTypes.func,
 };
-
-export default ConstructorItem;

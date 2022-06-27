@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styles from "./header.module.scss";
 import {
@@ -8,7 +8,7 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-export function Header() {
+export const Header: FC = () => {
   return (
     <header className={`${styles.header}`}>
       <nav className={`${styles.navbar} p-4`}>
@@ -55,4 +55,4 @@ export function Header() {
       </nav>
     </header>
   );
-}
+};

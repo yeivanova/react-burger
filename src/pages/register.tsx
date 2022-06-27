@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback } from "react";
 import { Link, Redirect } from "react-router-dom";
 import {
   Input,
@@ -6,27 +6,27 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
-import { registrationRequest } from "../services/actions/user";
+import { registrationRequest } from "../utils/api";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
 
-export function RegisterPage() {
-  const { isAuthenticated } = useSelector((store) => ({
+export const RegisterPage: FC = () => {
+  const { isAuthenticated } = useSelector((store: any) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
-  const [form, setValue] = useState({ name: "", email: "", password: "" });
-
+  const { values, handleChange } = useFormAndValidation();
   const dispatch = useDispatch();
 
-  const onChange = (e) => {
-    setValue({ ...form, [e.target.name]: e.target.value });
-  };
-
   const register = useCallback(
-    (e) => {
+    (e: FormEvent) => {
       e.preventDefault();
-      dispatch(registrationRequest(form));
+      dispatch<any>(
+        registrationRequest(
+          values as { name: string; email: string; password: string }
+        )
+      );
     },
-    [dispatch, form]
+    [dispatch, values]
   );
 
   if (isAuthenticated) {
@@ -45,24 +45,22 @@ export function RegisterPage() {
         <h1 className="text text_type_main-medium mb-6">Регистрация</h1>
         <Input
           placeholder="Имя"
-          value={form.name}
+          value={values.name || ""}
           name="name"
-          onChange={onChange}
+          onChange={handleChange}
         />
         <Input
           placeholder="Email"
-          value={form.email}
+          value={values.email || ""}
           name="email"
-          onChange={onChange}
+          onChange={handleChange}
         />
         <PasswordInput
-          placeholder="Пароль"
-          value={form.password}
+          value={values.password || ""}
           name="password"
-          onChange={onChange}
-          errorText={"Пароль должен содержать не менее 6 символов"}
+          onChange={handleChange}
         />
-        <Button type="primary" size="large">
+        <Button type="primary" size="medium">
           Зарегистрироваться
         </Button>
         <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
@@ -74,4 +72,4 @@ export function RegisterPage() {
       </form>
     </div>
   );
-}
+};

@@ -1,4 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  useEffect,
+  useRef,
+  useState,
+  FormEvent,
+  FocusEvent,
+} from "react";
 import { useLocation } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import styles from "./profile.module.scss";
@@ -8,66 +15,60 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserDataRequest } from "../services/actions/user";
+import { updateUserDataRequest } from "../utils/api";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
+import { TLocationState } from "../services/types/data";
 
-export function ProfilePage() {
-  const { user, isAuthenticated } = useSelector((store) => ({
+export const ProfilePage: FC = () => {
+  const { user, isAuthenticated } = useSelector((store: any) => ({
     user: store.user.userData,
     isAuthenticated: store.user.isAuthenticated,
   }));
 
   const dispatch = useDispatch();
-  const location = useLocation();
+  const location = useLocation<TLocationState>();
 
-  const [form, setFormValue] = useState({ name: "", email: "", password: "" });
+  const { values, setValues, handleChange } = useFormAndValidation();
   const [fieldDisabled, setDisabled] = useState(true);
   const [error, setError] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
 
   useEffect(() => {
-    setFormValue({ name: user.name, email: user.email, password: "" });
+    setValues({ name: user.name, email: user.email, password: "" });
   }, [user]);
 
-  const inputNameRef = useRef(null);
-  const inputEmailRef = useRef(null);
-  const inputPasswordRef = useRef(null);
+  const inputNameRef = useRef<HTMLInputElement>(null);
+  const inputEmailRef = useRef<HTMLInputElement>(null);
+  const inputPasswordRef = useRef<HTMLInputElement>(null);
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
 
-  const validateField = (value) => {
+  const validateField = (value: string) => {
     setError(!validateEmail(value));
   };
 
-  const onChange = (e) => {
-    setFormValue({ ...form, [e.target.name]: e.target.value });
-    setShowButtons(true);
-  };
-
-  const onFocus = () => {
-    setError(false);
-  };
-
-  const onBlur = (e) => {
-    if (e.target.value) {
-      validateField(e.target.value);
-    } else {
-      setError(false);
+  const onBlur = (e: FocusEvent<HTMLInputElement>) => {
+    if ((e.target as HTMLInputElement).value) {
+      validateField((e.target as HTMLInputElement).value);
     }
     setDisabled(true);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(updateUserDataRequest(form));
+    dispatch<any>(
+      updateUserDataRequest(
+        values as { name: string; email: string; password: string }
+      )
+    );
     setShowButtons(false);
   };
 
-  const onCancel = (e) => {
-    e.preventDefault();
-    setFormValue({ name: user.name, email: user.email, password: "" });
+  const onCancel = () => {
+    setValues({ name: user.name, email: user.email, password: "" });
     setShowButtons(false);
   };
 
@@ -82,51 +83,54 @@ export function ProfilePage() {
         <form className={`form ${styles.form}`} onSubmit={onSubmit}>
           <Input
             placeholder="Имя"
-            value={form["name"] ?? ""}
+            value={values["name"] ?? ""}
             name="name"
             icon="EditIcon"
             ref={inputNameRef}
             onIconClick={() => {
               setDisabled(false);
+              setShowButtons(true);
               setTimeout(() => inputNameRef.current?.focus(), 0);
             }}
-            onChange={onChange}
+            onChange={handleChange}
             onBlur={onBlur}
-            onFocus={onFocus}
+            error={false}
             disabled={fieldDisabled}
           />
 
           <Input
             placeholder="Логин"
-            value={form["email"] ?? ""}
+            value={values["email"] ?? ""}
             name="email"
             errorText={"Проверьте формат email-адреса"}
             icon="EditIcon"
             ref={inputEmailRef}
             onIconClick={() => {
               setDisabled(false);
+              setShowButtons(true);
               setTimeout(() => inputEmailRef.current?.focus(), 0);
             }}
-            onChange={onChange}
+            onChange={handleChange}
             onBlur={onBlur}
-            onFocus={onFocus}
+            error={false}
             disabled={fieldDisabled}
           />
 
           <Input
             type="password"
             placeholder="Пароль"
-            value={form["password"] ?? ""}
+            value={values["password"] ?? ""}
             name={"password"}
             icon="EditIcon"
             ref={inputPasswordRef}
             onIconClick={() => {
               setDisabled(false);
+              setShowButtons(true);
               setTimeout(() => inputPasswordRef.current?.focus(), 0);
             }}
-            onChange={onChange}
+            onChange={handleChange}
             onBlur={onBlur}
-            onFocus={onFocus}
+            error={false}
             disabled={fieldDisabled}
           />
 
@@ -149,4 +153,4 @@ export function ProfilePage() {
       </div>
     </div>
   );
-}
+};

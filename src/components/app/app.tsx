@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { getCookie } from "../../utils/utils";
+import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserDataRequest } from "../../services/actions/user";
+import { getUserDataRequest } from "../../utils/api";
 import {
   BrowserRouter,
   Route,
@@ -22,34 +21,35 @@ import {
   NotFoundPage,
 } from "../../pages";
 import { Header } from "../header/header";
-import Modal from "../modal/modal.js";
-import IngredientDetails from "../ingredient-details/ingredient-details.js";
-import { loadData } from "../../services/actions/ingredients";
+import { Modal } from "../modal/modal";
+import { IngredientDetails } from "../ingredient-details/ingredient-details";
+import { loadData } from "../../utils/api";
+import { Location } from "history";
 
-function Main() {
-  const { isAuthenticated } = useSelector((store) => ({
+const Main: FC = () => {
+  const { isAuthenticated } = useSelector((store: any) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
   const dispatch = useDispatch();
 
   const initUser = () => {
-    const refreshToken = getCookie("refreshToken");
     if (isAuthenticated) {
-      dispatch(getUserDataRequest(refreshToken));
+      dispatch<any>(getUserDataRequest());
     }
   };
 
   useEffect(() => {
     initUser();
-    dispatch(loadData());
+    dispatch<any>(loadData());
   }, [dispatch]);
 
-  const location = useLocation();
   const history = useHistory();
+  const location = useLocation<{ isModal: Location }>();
 
   const isModal = location.state && location.state.isModal;
   const closeModal = () => history.goBack();
+
   return (
     <div className="app">
       <Header />
@@ -73,8 +73,11 @@ function Main() {
           <ProtectedRoute path="/profile" exact={true}>
             <ProfilePage />
           </ProtectedRoute>
-          <ProtectedRoute path="/profile/*">
+          <ProtectedRoute path="/profile/orders" exact={true}>
             <OrdersPage />
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile/orders/:number" exact={true}>
+            <div>orders</div>
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPage />
@@ -85,11 +88,7 @@ function Main() {
         </Switch>
         {isModal && (
           <Route path="/ingredients/:id" exact={true}>
-            <Modal
-              isModal={isModal}
-              closeMe={closeModal}
-              title={"Детали ингредиента"}
-            >
+            <Modal closeMe={closeModal} title={"Детали ингредиента"}>
               <IngredientDetails />
             </Modal>
           </Route>
@@ -97,14 +96,12 @@ function Main() {
       </main>
     </div>
   );
-}
+};
 
-function App() {
+export const App: FC = () => {
   return (
     <BrowserRouter>
       <Main />
     </BrowserRouter>
   );
-}
-
-export default App;
+};

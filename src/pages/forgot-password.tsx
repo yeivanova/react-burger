@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, FC, FormEvent } from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
@@ -7,35 +7,31 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  passwordForgotRequest,
-  IS_PASSWORD_REQUESTED,
-} from "../services/actions/user";
+import { IS_PASSWORD_REQUESTED } from "../services/actions/user";
+import { passwordForgotRequest } from "../utils/api";
+import { useFormAndValidation } from "../hooks/useFormAndValidation";
+import { TLocationState } from "../services/types/data";
 
-export function ForgotPasswordPage() {
-  const { isTokenRequested, isAuthenticated } = useSelector((store) => ({
+export const ForgotPasswordPage: FC = () => {
+  const { isTokenRequested, isAuthenticated } = useSelector((store: any) => ({
     isTokenRequested: store.user.forgotPassword.isTokenRequested,
     isAuthenticated: store.user.isAuthenticated,
   }));
 
-  const [form, setValue] = useState({ email: "" });
+  const { values, handleChange } = useFormAndValidation();
 
   const dispatch = useDispatch();
-  const location = useLocation();
-
-  const onChange = (e) => {
-    setValue({ ...form, [e.target.name]: e.target.value });
-  };
+  const location = useLocation<TLocationState>();
 
   const forgot = useCallback(
-    (e) => {
+    (e: FormEvent) => {
       e.preventDefault();
-      dispatch(passwordForgotRequest(form));
+      dispatch<any>(passwordForgotRequest(values as { email: string }));
       dispatch({
         type: IS_PASSWORD_REQUESTED,
       });
     },
-    [dispatch, form]
+    [dispatch, values]
   );
 
   if (isTokenRequested) {
@@ -60,15 +56,12 @@ export function ForgotPasswordPage() {
         </h1>
         <Input
           type={"email"}
-          placeholder={"Email"}
-          onChange={onChange}
-          value={form.email}
+          placeholder="Укажите e-mail"
+          onChange={handleChange}
+          value={values.email || ""}
           name={"email"}
-          error={false}
-          errorText={"Ошибка"}
         />
-
-        <Button type="primary" size="large">
+        <Button type="primary" size="medium">
           Восстановить
         </Button>
         <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
@@ -80,4 +73,4 @@ export function ForgotPasswordPage() {
       </form>
     </div>
   );
-}
+};

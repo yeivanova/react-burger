@@ -8,7 +8,6 @@ export const CART_RESET = "CART_RESET";
 
 export function addItem(item) {
   item.item.uuid = uuid();
-  console.log(item);
   return {
     type: ADD_ITEM,
     ...item,

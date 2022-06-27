@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from "react";
-import uuid from "react-uuid";
+import React, { useState, useMemo, FC } from "react";
+import { v4 as uuid } from "uuid";
 import styles from "./burger-constructor.module.scss";
-import ConstructorItem from "../constructor-item/constructor-item.js";
-import PriceBlock from "../price-block/price-block.js";
-import OrderDetails from "../order-details/order-details.js";
-import Modal from "../modal/modal.js";
+import { ConstructorItem } from "../constructor-item/constructor-item";
+import { PriceBlock } from "../price-block/price-block";
+import { OrderDetails } from "../order-details/order-details";
+import { Modal } from "../modal/modal";
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -15,18 +15,24 @@ import {
   sortItems,
   cartReset,
 } from "../../services/actions/constructor";
-import { getOrder, numberReset } from "../../services/actions/order";
-import { useHistory, useLocation } from "react-router-dom";
+import { numberReset } from "../../services/actions/order";
+import { getOrder } from "../../utils/api";
+import { useHistory } from "react-router-dom";
+import { TIngredient } from "../../services/types/data";
 
-function BurgerConstructor() {
+interface IDragItem {
+  item: TIngredient;
+}
+
+export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { cartItems, bunItem, number, isAuthenticated } = useSelector(
-    (store) => ({
+  const { cartItems, bunItem, orderNumber, isAuthenticated } = useSelector(
+    (store: any) => ({
       cartItems: store.cartItems.cartItems,
       bunItem: store.cartItems.bunItem,
-      number: store.order.number,
+      orderNumber: store.order.number,
       isAuthenticated: store.user.isAuthenticated,
     })
   );
@@ -34,11 +40,11 @@ function BurgerConstructor() {
   const totalPrice = useMemo(() => {
     return (
       (bunItem !== null ? bunItem.price * 2 : 0) +
-      cartItems.reduce((sum, val) => sum + val.price, 0)
+      cartItems.reduce((sum: number, val: TIngredient) => sum + val.price, 0)
     );
   }, [bunItem, cartItems]);
 
-  const moveItem = (item) => {
+  const moveItem = (item: IDragItem): void => {
     item.item.type === "bun" ? dispatch(setBun(item)) : dispatch(addItem(item));
   };
 
@@ -47,8 +53,8 @@ function BurgerConstructor() {
     collect: (monitor) => ({
       isHover: monitor.isOver(),
     }),
-    drop(itemId) {
-      moveItem(itemId);
+    drop(item) {
+      moveItem(item as IDragItem);
     },
   });
 
@@ -70,12 +76,15 @@ function BurgerConstructor() {
       history.replace({ pathname: `/login` });
       return;
     }
-    const orderContent = [...cartItems.map((item) => item._id), bunItem._id];
-    dispatch(getOrder(orderContent));
+    const orderContent = [
+      ...cartItems.map((item: TIngredient) => item._id),
+      bunItem._id,
+    ];
+    dispatch<any>(getOrder(orderContent));
     openModal();
   };
 
-  const moveCard = (dragIndex, hoverIndex) => {
+  const moveCard = (dragIndex: number, hoverIndex: number) => {
     const changedCartItems = cartItems.slice();
     changedCartItems.splice(dragIndex, 1);
     changedCartItems.splice(hoverIndex, 0, cartItems[dragIndex]);
@@ -99,7 +108,7 @@ function BurgerConstructor() {
               isLocked={true}
             />
           )}
-          {cartItems.map((item, index) => (
+          {cartItems.map((item: TIngredient, index: number) => (
             <ConstructorItem
               item={item}
               isLocked={false}
@@ -130,11 +139,9 @@ function BurgerConstructor() {
       </PriceBlock>
       {displayModal && !error && (
         <Modal closeMe={closeModal}>
-          <OrderDetails orderNumber={number} />
+          <OrderDetails orderNumber={orderNumber} />
         </Modal>
       )}
     </>
   );
-}
-
-export default BurgerConstructor;
+};

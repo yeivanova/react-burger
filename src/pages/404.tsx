@@ -1,8 +1,8 @@
-import React from "react";
+import React, { FC } from "react";
 import styles from "./404.module.scss";
 import { Link } from "react-router-dom";
 
-export function NotFoundPage() {
+export const NotFoundPage: FC = () => {
   return (
     <>
       <div className={`${styles.page_container} pl-4 pr-4`}>
@@ -22,4 +22,4 @@ export function NotFoundPage() {
       </div>
     </>
   );
-}
+};
