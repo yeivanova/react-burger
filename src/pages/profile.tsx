@@ -1,155 +1,84 @@
-import React, {
-  FC,
-  useEffect,
-  useRef,
-  useState,
-  FormEvent,
-  FocusEvent,
-} from "react";
-import { useLocation } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import React, { FC, useEffect } from "react";
+import { Link, useLocation, Switch, useRouteMatch } from "react-router-dom";
 import styles from "./profile.module.scss";
+import { v4 as uuid } from "uuid";
 import { ProfileMenu } from "../components/profile-menu/profile-menu";
+import { ProtectedRoute } from "../components/protected-route/protected-route";
+import { OrderItem } from "../components/order-item/order-item";
+import { ProfileForm } from "../components/profile-form/profile-form";
+import { Preloader } from "../components/preloader/preloader";
+import { useSelector, useDispatch } from "../services/hooks";
 import {
-  Input,
-  Button,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from "react-redux";
-import { updateUserDataRequest } from "../utils/api";
-import { useFormAndValidation } from "../hooks/useFormAndValidation";
-import { TLocationState } from "../services/types/data";
+  WsProfileConnectionStart,
+  WsProfileConnectionClosed,
+} from "../services/actions/ws-auth";
 
 export const ProfilePage: FC = () => {
-  const { user, isAuthenticated } = useSelector((store: any) => ({
-    user: store.user.userData,
-    isAuthenticated: store.user.isAuthenticated,
+  const { wsConnected, orders, error } = useSelector((store) => ({
+    wsConnected: store.wsAuth.wsConnected,
+    orders: store.wsAuth.orders,
+    error: store.wsAuth.error,
   }));
 
+  const location = useLocation();
   const dispatch = useDispatch();
-  const location = useLocation<TLocationState>();
-
-  const { values, setValues, handleChange } = useFormAndValidation();
-  const [fieldDisabled, setDisabled] = useState(true);
-  const [error, setError] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
 
   useEffect(() => {
-    setValues({ name: user.name, email: user.email, password: "" });
-  }, [user]);
-
-  const inputNameRef = useRef<HTMLInputElement>(null);
-  const inputEmailRef = useRef<HTMLInputElement>(null);
-  const inputPasswordRef = useRef<HTMLInputElement>(null);
-
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
-  const validateField = (value: string) => {
-    setError(!validateEmail(value));
-  };
-
-  const onBlur = (e: FocusEvent<HTMLInputElement>) => {
-    if ((e.target as HTMLInputElement).value) {
-      validateField((e.target as HTMLInputElement).value);
+    if (!wsConnected) {
+      dispatch(WsProfileConnectionStart());
     }
-    setDisabled(true);
-  };
+    return () => {
+      if (wsConnected) {
+        dispatch(WsProfileConnectionClosed());
+      }
+    };
+  }, [dispatch, wsConnected]);
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    dispatch<any>(
-      updateUserDataRequest(
-        values as { name: string; email: string; password: string }
-      )
-    );
-    setShowButtons(false);
-  };
-
-  const onCancel = () => {
-    setValues({ name: user.name, email: user.email, password: "" });
-    setShowButtons(false);
-  };
-
-  if (!isAuthenticated) {
-    return <Redirect to={location.state?.from || "/login"} />;
-  }
+  const { url } = useRouteMatch();
 
   return (
-    <div className={`${styles.page_container} pt-30 pl-4 pr-4`}>
+    <div className={`${styles.page_container} pt-10 pl-4 pr-4`}>
       <ProfileMenu />
-      <div className={styles.column}>
-        <form className={`form ${styles.form}`} onSubmit={onSubmit}>
-          <Input
-            placeholder="Имя"
-            value={values["name"] ?? ""}
-            name="name"
-            icon="EditIcon"
-            ref={inputNameRef}
-            onIconClick={() => {
-              setDisabled(false);
-              setShowButtons(true);
-              setTimeout(() => inputNameRef.current?.focus(), 0);
-            }}
-            onChange={handleChange}
-            onBlur={onBlur}
-            error={false}
-            disabled={fieldDisabled}
-          />
-
-          <Input
-            placeholder="Логин"
-            value={values["email"] ?? ""}
-            name="email"
-            errorText={"Проверьте формат email-адреса"}
-            icon="EditIcon"
-            ref={inputEmailRef}
-            onIconClick={() => {
-              setDisabled(false);
-              setShowButtons(true);
-              setTimeout(() => inputEmailRef.current?.focus(), 0);
-            }}
-            onChange={handleChange}
-            onBlur={onBlur}
-            error={false}
-            disabled={fieldDisabled}
-          />
-
-          <Input
-            type="password"
-            placeholder="Пароль"
-            value={values["password"] ?? ""}
-            name={"password"}
-            icon="EditIcon"
-            ref={inputPasswordRef}
-            onIconClick={() => {
-              setDisabled(false);
-              setShowButtons(true);
-              setTimeout(() => inputPasswordRef.current?.focus(), 0);
-            }}
-            onChange={handleChange}
-            onBlur={onBlur}
-            error={false}
-            disabled={fieldDisabled}
-          />
-
-          {showButtons ? (
-            <div className={`${styles.button_row} mt-5`}>
-              <Button type="primary" size="medium">
-                Сохранить
-              </Button>
-              <Button
-                type="secondary"
-                size="medium"
-                htmlType="button"
-                onClick={onCancel}
-              >
-                Отмена
-              </Button>
+      <div className={`${styles.column}`}>
+        <Switch>
+          <ProtectedRoute path={url} exact={true}>
+            <ProfileForm />
+          </ProtectedRoute>
+          {error ? (
+            <div className="text text_type_main-large mt-10 mb-5">
+              Ошибка при загрузке данных.
             </div>
-          ) : null}
-        </form>
+          ) : !wsConnected ? (
+            <Preloader />
+          ) : (
+            <>
+              <ProtectedRoute path={`${url}/orders`} exact={true}>
+                <section className="pb-2">
+                  <div id="wrapper" className={`${styles.column_inner}`}>
+                    <ul>
+                      {orders.map((item) => (
+                        <li
+                          className={`${styles.order_item} p-6 mb-4`}
+                          key={item._id}
+                        >
+                          <Link
+                            className={styles.link}
+                            to={{
+                              pathname: `/profile/orders/${item._id}`,
+                              state: { isModalAuthOrder: location },
+                            }}
+                          >
+                            <OrderItem item={item} key={uuid()} />
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </section>
+              </ProtectedRoute>
+            </>
+          )}
+        </Switch>
       </div>
     </div>
   );

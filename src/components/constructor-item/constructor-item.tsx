@@ -4,10 +4,10 @@ import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../../services/hooks";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import { DELETE_ITEM } from "../../services/actions/constructor";
+import { deleteItem } from "../../services/actions/constructor";
 import { TIngredient } from "../../services/types/data";
 
 type TConstructorItemProps = {
@@ -32,11 +32,8 @@ export const ConstructorItem: FC<TConstructorItemProps> = ({
   const ref = useRef<HTMLLIElement>(null);
   const dispatch = useDispatch();
 
-  const deleteItem = (item: TIngredient) => {
-    dispatch({
-      type: DELETE_ITEM,
-      item,
-    });
+  const deleteIt = (item: TIngredient) => {
+    dispatch(deleteItem(item));
   };
 
   const [{ handlerId }, drop] = useDrop({
@@ -105,7 +102,7 @@ export const ConstructorItem: FC<TConstructorItemProps> = ({
           thumbnail={item.image}
           type={type}
           isLocked={isLocked}
-          handleClose={() => deleteItem(item)}
+          handleClose={() => deleteIt(item)}
         />
       </li>
     </>

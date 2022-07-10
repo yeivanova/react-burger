@@ -7,18 +7,17 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { IS_PASSWORD_RESETED } from "../services/actions/user";
-
+import { useSelector, useDispatch } from "../services/hooks";
+import { isPasswordReseted } from "../services/actions/user";
 import { resetPasswordRequest } from "../utils/api";
 import { useFormAndValidation } from "../hooks/useFormAndValidation";
 import { TLocationState } from "../services/types/data";
 
 export const ResetPasswordPage: FC = () => {
-  const { isTokenRequested, isAuthenticated, isPasswordReseted } = useSelector(
-    (store: any) => ({
+  const { isTokenRequested, isAuthenticated, isPasswordResetedFlag } = useSelector(
+    (store) => ({
       isTokenRequested: store.user.forgotPassword.isTokenRequested,
-      isPasswordReseted: store.user.resetPassword.isPasswordReseted,
+      isPasswordResetedFlag: store.user.resetPassword.isPasswordReseted,
       isAuthenticated: store.user.isAuthenticated,
     })
   );
@@ -31,17 +30,15 @@ export const ResetPasswordPage: FC = () => {
   const reset = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      dispatch<any>(
+      dispatch(
         resetPasswordRequest(values as { password: string; token: string })
       );
-      dispatch({
-        type: IS_PASSWORD_RESETED,
-      });
+      dispatch(isPasswordReseted());
     },
     [dispatch, values]
   );
 
-  if (isPasswordReseted) {
+  if (isPasswordResetedFlag) {
     return (
       <Redirect
         to={{

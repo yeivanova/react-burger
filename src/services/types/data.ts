@@ -1,8 +1,8 @@
-import { store } from "../store";
-
 export type TLocationState = {
   from: { pathname: string };
   isModal: boolean;
+  isModalOrder: boolean;
+  isModalAuthOrder: boolean;
 };
 
 export type TIngredient = {
@@ -20,13 +20,11 @@ export type TIngredient = {
   uuid?: string;
 };
 
-export type AppDispatch = typeof store.dispatch;
-
-export interface IUserReq {
-  email: string;
-  name: string;
-  password: string;
-}
+export type TUserReq = {
+  email?: string | null;
+  name?: string | null;
+  password?: string | null;
+};
 
 export interface IValues {
   [key: string]: string;
@@ -36,4 +34,21 @@ export type TFetchOptions = {
   method: string;
   headers: IValues;
   body?: string;
+};
+
+export type TWsOrder = {
+  createdAt: string;
+  ingredients: Array<string>;
+  name: string;
+  number: number;
+  price: number;
+  status: string;
+  updatedAt: string;
+  _id: string;
+};
+
+export type TWsOrders = {
+  orders: Array<TWsOrder>;
+  total: number | null;
+  totalToday: number | null;
 };

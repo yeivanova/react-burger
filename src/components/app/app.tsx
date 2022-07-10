@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "../../services/hooks";
 import { getUserDataRequest } from "../../utils/api";
 import {
   BrowserRouter,
@@ -17,17 +17,19 @@ import {
   ResetPasswordPage,
   ProfilePage,
   IngredientPage,
-  OrdersPage,
   NotFoundPage,
+  FeedPage,
+  OrderPage,
 } from "../../pages";
 import { Header } from "../header/header";
 import { Modal } from "../modal/modal";
 import { IngredientDetails } from "../ingredient-details/ingredient-details";
+import { OrderItemDetails } from "../order-item-details/order-item-details";
 import { loadData } from "../../utils/api";
 import { Location } from "history";
 
 const Main: FC = () => {
-  const { isAuthenticated } = useSelector((store: any) => ({
+  const { isAuthenticated } = useSelector((store) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
@@ -35,26 +37,34 @@ const Main: FC = () => {
 
   const initUser = () => {
     if (isAuthenticated) {
-      dispatch<any>(getUserDataRequest());
+      dispatch(getUserDataRequest());
     }
   };
 
   useEffect(() => {
     initUser();
-    dispatch<any>(loadData());
+    dispatch(loadData());
   }, [dispatch]);
 
   const history = useHistory();
-  const location = useLocation<{ isModal: Location }>();
+  const location = useLocation<{
+    isModal: Location;
+    isModalOrder: Location;
+    isModalAuthOrder: Location;
+  }>();
 
   const isModal = location.state && location.state.isModal;
+  const isModalOrder = location.state && location.state.isModalOrder;
+  const isModalAuthOrder = location.state && location.state.isModalAuthOrder;
   const closeModal = () => history.goBack();
 
   return (
     <div className="app">
       <Header />
       <main>
-        <Switch location={isModal || location}>
+        <Switch
+          location={isModal || isModalOrder || isModalAuthOrder || location}
+        >
           <Route path="/" exact={true}>
             <HomePage />
           </Route>
@@ -70,17 +80,20 @@ const Main: FC = () => {
           <Route path="/reset-password" exact={true}>
             <ResetPasswordPage />
           </Route>
-          <ProtectedRoute path="/profile" exact={true}>
+          <ProtectedRoute path="/profile">
             <ProfilePage />
           </ProtectedRoute>
-          <ProtectedRoute path="/profile/orders" exact={true}>
-            <OrdersPage />
-          </ProtectedRoute>
-          <ProtectedRoute path="/profile/orders/:number" exact={true}>
-            <div>orders</div>
+          <ProtectedRoute path="/profile/orders/:id" exact={true}>
+            <OrderPage isAuthOrders={true} />
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPage />
+          </Route>
+          <Route path="/feed" exact={true}>
+            <FeedPage />
+          </Route>
+          <Route path="/feed/:id" exact={true}>
+            <OrderPage isAuthOrders={false} />
           </Route>
           <Route>
             <NotFoundPage />
@@ -92,6 +105,20 @@ const Main: FC = () => {
               <IngredientDetails />
             </Modal>
           </Route>
+        )}
+        {isModalOrder && (
+          <Route path="/feed/:id" exact={true}>
+            <Modal closeMe={closeModal}>
+              <OrderItemDetails isAuthOrders={false} />
+            </Modal>
+          </Route>
+        )}
+        {isModalAuthOrder && (
+          <ProtectedRoute path="/profile/orders/:id" exact={true}>
+            <Modal closeMe={closeModal}>
+              <OrderItemDetails isAuthOrders={true} />
+            </Modal>
+          </ProtectedRoute>
         )}
       </main>
     </div>
