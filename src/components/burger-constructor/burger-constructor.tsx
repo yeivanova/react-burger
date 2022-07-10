@@ -39,7 +39,7 @@ export const BurgerConstructor: FC = () => {
   const totalPrice = useMemo(() => {
     return (
       (bunItem !== null ? bunItem.price * 2 : 0) +
-      cartItems.reduce((sum: number, val: TIngredient) => sum + val.price, 0)
+      cartItems.reduce((sum, val) => sum + val.price, 0)
     );
   }, [bunItem, cartItems]);
 
@@ -78,10 +78,7 @@ export const BurgerConstructor: FC = () => {
       return;
     }
     if (bunItem !== null) {
-      const orderContent = [
-        ...cartItems.map((item: TIngredient) => item._id),
-        bunItem._id,
-      ];
+      const orderContent = [...cartItems.map((item) => item._id), bunItem._id];
 
       dispatch(getOrder(orderContent));
       openModal();
@@ -112,7 +109,7 @@ export const BurgerConstructor: FC = () => {
               isLocked={true}
             />
           )}
-          {cartItems.map((item: TIngredient, index: number) => (
+          {cartItems.map((item, index) => (
             <ConstructorItem
               item={item}
               isLocked={false}

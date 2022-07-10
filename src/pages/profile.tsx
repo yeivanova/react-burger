@@ -56,7 +56,7 @@ export const ProfilePage: FC = () => {
                 <section className="pb-2">
                   <div id="wrapper" className={`${styles.column_inner}`}>
                     <ul>
-                      {orders.map((item) => (
+                      {orders?.map((item) => (
                         <li
                           className={`${styles.order_item} p-6 mb-4`}
                           key={item._id}

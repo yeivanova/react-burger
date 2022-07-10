@@ -11,6 +11,10 @@ import {
   WsOrderConnectionStart,
   WsOrderConnectionClosed,
 } from "../../services/actions/ws";
+import {
+  WsProfileConnectionStart,
+  WsProfileConnectionClosed,
+} from "../../services/actions/ws-auth";
 import { getDateFormat } from "../../utils/utils";
 
 type TOrderItemDetailsProps = {
@@ -35,32 +39,41 @@ export const OrderItemDetails: FC<TOrderItemDetailsProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!wsConnected) {
-      dispatch(WsOrderConnectionStart());
-    }
-
-    return () => {
-      if (wsConnected) {
-        dispatch(WsOrderConnectionClosed());
+    if (isAuthOrders) {
+      if (!wsConnected) {
+        dispatch(WsProfileConnectionStart());
       }
-    };
-  }, [dispatch]);
+
+      return () => {
+        if (wsConnected) {
+          dispatch(WsProfileConnectionClosed());
+        }
+      };
+    } else {
+      if (!wsConnected) {
+        dispatch(WsOrderConnectionStart());
+      }
+
+      return () => {
+        if (wsConnected) {
+          dispatch(WsOrderConnectionClosed());
+        }
+      };
+    }
+  }, [dispatch, wsConnected]);
 
   let order, orderItems, total, element;
 
   let countById: { [key: string]: number } = {};
   if (wsConnected) {
-    order = orders.find((el: TWsOrder) => el._id === orderId);
+    order = orders.find((el) => el._id === orderId);
 
     if (typeof order !== "undefined") {
-      let uniqueIngredients: string[] = Array.from(new Set(order.ingredients));
+      let uniqueIngredients = Array.from(new Set(order.ingredients));
       orderItems = uniqueIngredients
-        .map((id: string) => items.filter((el: TIngredient) => el._id === id))
+        .map((id) => items.filter((el) => el._id === id))
         .flat();
-      total = orderItems.reduce(
-        (sum: number, val: TIngredient) => sum + val.price,
-        0
-      );
+      total = orderItems.reduce((sum, val) => sum + val.price, 0);
 
       for (element of order.ingredients) {
         if (countById[element]) {
@@ -98,7 +111,7 @@ export const OrderItemDetails: FC<TOrderItemDetailsProps> = ({
           <p className="text text_type_main-medium mb-6">Состав:</p>
           <div id="wrapper" className={`${styles.column_inner} mb-10`}>
             <ul className={styles.list}>
-              {orderItems?.map((el: TIngredient) => (
+              {orderItems?.map((el) => (
                 <li className={`${styles.item} mb-4`} key={uuid()}>
                   <div className={styles.img_wrapper}>
                     <img

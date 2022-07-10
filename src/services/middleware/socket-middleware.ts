@@ -45,7 +45,7 @@ export const socketMiddleware = (
           dispatch({ type: onClose, payload: event });
         };
 
-        if (type === "WS_SEND_MESSAGE") {
+        if (type === onSendMessage) {
           const message = payload;
           socket.send(JSON.stringify(message));
         }

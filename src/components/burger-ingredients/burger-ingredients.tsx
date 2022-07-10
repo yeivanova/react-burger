@@ -29,7 +29,7 @@ export const BurgerIngredients: FC = () => {
 
   const ingredientsCounter = useMemo(() => {
     const counter = {} as TCounter;
-    cartItems.forEach((el: TIngredient) => {
+    cartItems.forEach((el) => {
       if (!counter[el._id]) counter[el._id] = 0;
       counter[el._id]++;
     });
@@ -38,17 +38,17 @@ export const BurgerIngredients: FC = () => {
   }, [cartItems, bunItem]);
 
   const buns = useMemo(
-    () => items.filter((item: TIngredient) => item.type === "bun"),
+    () => items.filter((item) => item.type === "bun"),
     [items]
   );
 
   const sauces = useMemo(
-    () => items.filter((item: TIngredient) => item.type === "sauce"),
+    () => items.filter((item) => item.type === "sauce"),
     [items]
   );
 
   const mains = useMemo(
-    () => items.filter((item: TIngredient) => item.type === "main"),
+    () => items.filter((item) => item.type === "main"),
     [items]
   );
 
@@ -116,7 +116,7 @@ export const BurgerIngredients: FC = () => {
       >
         <div id="bun" className="tabcontent" ref={bunRef}>
           <IngredientSection sectionTitle="Булки">
-            {buns.map((item: TIngredient) => (
+            {buns.map((item) => (
               <IngredientItem
                 item={item}
                 key={item._id}
@@ -127,7 +127,7 @@ export const BurgerIngredients: FC = () => {
         </div>
         <div id="sauce" className="tabcontent" ref={sauceRef}>
           <IngredientSection sectionTitle="Соусы">
-            {sauces.map((item: TIngredient) => (
+            {sauces.map((item) => (
               <IngredientItem
                 item={item}
                 key={item._id}
@@ -138,7 +138,7 @@ export const BurgerIngredients: FC = () => {
         </div>
         <div id="main" className="tabcontent" ref={mainRef}>
           <IngredientSection sectionTitle="Начинки">
-            {mains.map((item: TIngredient) => (
+            {mains.map((item) => (
               <IngredientItem
                 item={item}
                 key={item._id}

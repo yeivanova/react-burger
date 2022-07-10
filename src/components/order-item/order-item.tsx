@@ -25,17 +25,17 @@ export const OrderItem: FC<TOrderDetailsProps> = ({ item }) => {
 
   const orderItems = item.ingredients
     .slice(0, 6)
-    .map((id: string) => items.filter((el: TIngredient) => el._id === id))
+    .map((id) => items.filter((el) => el._id === id))
     .flat();
   const lastIteem = orderItems.pop();
   const quantity = item.ingredients.length - orderItems.length - 1;
 
   const orderPrice = useMemo(() => {
     const order = item.ingredients
-      .map((id: string) => items.filter((el: TIngredient) => el._id === id))
+      .map((id) => items.filter((el) => el._id === id))
       .flat();
 
-    return order.reduce((sum: number, val: TIngredient) => sum + val.price, 0);
+    return order.reduce((sum, val) => sum + val.price, 0);
   }, [item.ingredients, items]);
 
   return (

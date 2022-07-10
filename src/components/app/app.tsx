@@ -80,11 +80,11 @@ const Main: FC = () => {
           <Route path="/reset-password" exact={true}>
             <ResetPasswordPage />
           </Route>
-          <ProtectedRoute path="/profile">
-            <ProfilePage />
-          </ProtectedRoute>
           <ProtectedRoute path="/profile/orders/:id" exact={true}>
             <OrderPage isAuthOrders={true} />
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile">
+            <ProfilePage />
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientPage />

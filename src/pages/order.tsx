@@ -10,31 +10,46 @@ import {
   WsOrderConnectionStart,
   WsOrderConnectionClosed,
 } from "../services/actions/ws";
-
+import {
+  WsProfileConnectionStart,
+  WsProfileConnectionClosed,
+} from "../services/actions/ws-auth";
 type TOrderPageProps = {
   isAuthOrders: boolean;
 };
 
 export const OrderPage: FC<TOrderPageProps> = ({ isAuthOrders }) => {
   const { wsConnected, orders, error } = useSelector((store) => ({
-    wsConnected: store.ws.wsConnected,
-    orders: store.ws.orders,
-    error: store.ws.error,
+    wsConnected: isAuthOrders ? store.wsAuth.wsConnected : store.ws.wsConnected,
+    orders: isAuthOrders ? store.wsAuth.orders : store.ws.orders,
+    error: isAuthOrders ? store.wsAuth.error : store.ws.error,
   }));
-
+  console.log(isAuthOrders);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!wsConnected) {
-      dispatch(WsOrderConnectionStart());
-    }
-
-    return () => {
-      if (wsConnected) {
-        dispatch(WsOrderConnectionClosed());
+    if (isAuthOrders) {
+      if (!wsConnected) {
+        dispatch(WsProfileConnectionStart());
       }
-    };
-  }, [dispatch]);
+
+      return () => {
+        if (wsConnected) {
+          dispatch(WsProfileConnectionClosed());
+        }
+      };
+    } else {
+      if (!wsConnected) {
+        dispatch(WsOrderConnectionStart());
+      }
+
+      return () => {
+        if (wsConnected) {
+          dispatch(WsOrderConnectionClosed());
+        }
+      };
+    }
+  }, [dispatch, wsConnected]);
 
   const orderId = useParams<{ id: string }>().id;
   const order = orders.find((item: { _id: string }) => item._id === orderId);
