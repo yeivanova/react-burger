@@ -3,7 +3,7 @@ h1 {
 }
 
 .column_inner {
-  max-height: 664px;
+  max-height: calc(100vh - 344px);
   overflow-y: auto;
 }
 

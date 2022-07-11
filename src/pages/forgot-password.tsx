@@ -6,14 +6,14 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { IS_PASSWORD_REQUESTED } from "../services/actions/user";
+import { useSelector, useDispatch } from "../services/hooks";
+import { isPasswordRequested } from "../services/actions/user";
 import { passwordForgotRequest } from "../utils/api";
 import { useFormAndValidation } from "../hooks/useFormAndValidation";
 import { TLocationState } from "../services/types/data";
 
 export const ForgotPasswordPage: FC = () => {
-  const { isTokenRequested, isAuthenticated } = useSelector((store: any) => ({
+  const { isTokenRequested, isAuthenticated } = useSelector((store) => ({
     isTokenRequested: store.user.forgotPassword.isTokenRequested,
     isAuthenticated: store.user.isAuthenticated,
   }));
@@ -26,10 +26,8 @@ export const ForgotPasswordPage: FC = () => {
   const forgot = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      dispatch<any>(passwordForgotRequest(values as { email: string }));
-      dispatch({
-        type: IS_PASSWORD_REQUESTED,
-      });
+      dispatch(passwordForgotRequest(values as { email: string }));
+      dispatch(isPasswordRequested());
     },
     [dispatch, values]
   );

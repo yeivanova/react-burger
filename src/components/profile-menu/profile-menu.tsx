@@ -1,13 +1,13 @@
 import React, { FC, useCallback, MouseEvent } from "react";
 import { Redirect, NavLink } from "react-router-dom";
 import styles from "./profile-menu.module.scss";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "../../services/hooks";
 import { logoutRequest } from "../../utils/api";
 import { getCookie } from "../../utils/utils";
 import { unautheticateUser } from "../../services/actions/user";
 
 export const ProfileMenu: FC = () => {
-  const { isAuthenticated } = useSelector((store: any) => ({
+  const { isAuthenticated } = useSelector((store) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
@@ -16,7 +16,7 @@ export const ProfileMenu: FC = () => {
   const onLogoutClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      dispatch<any>(logoutRequest(getCookie("refreshToken")));
+      dispatch(logoutRequest(getCookie("refreshToken")));
       dispatch(unautheticateUser());
     },
     [dispatch]
@@ -33,7 +33,7 @@ export const ProfileMenu: FC = () => {
   }
 
   return (
-    <aside className={`${styles.sidebar} mr-15`}>
+    <aside className={`${styles.sidebar} mt-20 mr-15`}>
       <ul>
         <li>
           <NavLink

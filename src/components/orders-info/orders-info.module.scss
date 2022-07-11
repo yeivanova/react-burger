@@ -1,0 +1,41 @@
+h2 {
+  width: 100%;
+  text-align: left;
+}
+
+.status {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.status_column {
+  flex-basis: 272px;
+}
+
+.status_column_inner {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: 330px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+
+  li {
+    list-style-type: none;
+  }
+}
+
+.number {
+  color: var(--colors-interface-success);
+}
+
+@media (max-width: 640px) {
+  .orders_list {
+    justify-content: center;
+    padding: 0 16px;
+  }
+}

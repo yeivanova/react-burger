@@ -7,13 +7,13 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "../services/hooks";
 import { loginRequest } from "../utils/api";
 import { TLocationState } from "../services/types/data";
 import { useFormAndValidation } from "../hooks/useFormAndValidation";
 
 export const LoginPage: FC = () => {
-  const { isAuthenticated } = useSelector((store: any) => ({
+  const { isAuthenticated } = useSelector((store) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
@@ -25,9 +25,7 @@ export const LoginPage: FC = () => {
   const login = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      dispatch<any>(
-        loginRequest(values as { email: string; password: string })
-      );
+      dispatch(loginRequest(values as { email: string; password: string }));
     },
     [dispatch, values]
   );

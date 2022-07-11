@@ -2,10 +2,10 @@ import React, { FC } from "react";
 import styles from "./ingredient-details.module.scss";
 import { Preloader } from "../preloader/preloader";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useSelector } from "../../services/hooks";
 
 export const IngredientDetails: FC = () => {
-  const { items } = useSelector((store: any) => ({
+  const { items } = useSelector((store) => ({
     items: store.ingredients.items,
   }));
 

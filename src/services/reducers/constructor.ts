@@ -4,14 +4,24 @@ import {
   SET_BUN,
   SORT_ITEMS,
   CART_RESET,
-} from "../actions/constructor";
+} from "../constants/constructor";
+import { TIngredient } from "../types/data";
+import type { TConstructorActions } from "../actions/constructor";
 
-const cartInitialState = {
+type TCartState = {
+  cartItems: ReadonlyArray<TIngredient>;
+  bunItem: TIngredient | null;
+};
+
+const cartInitialState: TCartState = {
   cartItems: [],
   bunItem: null,
 };
 
-export const constructorReducer = (state = cartInitialState, action) => {
+export const constructorReducer = (
+  state: TCartState = cartInitialState,
+  action: TConstructorActions
+): TCartState => {
   switch (action.type) {
     case CART_RESET: {
       return {
@@ -23,27 +33,27 @@ export const constructorReducer = (state = cartInitialState, action) => {
     case ADD_ITEM: {
       return {
         ...state,
-        cartItems: [...state.cartItems, Object.assign({}, action.item)],
+        cartItems: [...state.cartItems, Object.assign({}, action.payload)],
       };
     }
     case DELETE_ITEM: {
       return {
         ...state,
         cartItems: [...state.cartItems].filter(
-          (item) => item.cartItemId !== action.item.cartItemId
+          (item) => item !== action.payload
         ),
       };
     }
     case SET_BUN: {
       return {
         ...state,
-        bunItem: action.item,
+        bunItem: action.payload,
       };
     }
     case SORT_ITEMS: {
       return {
         ...state,
-        cartItems: action.cartItems,
+        cartItems: action.payload,
       };
     }
     default:

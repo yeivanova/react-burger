@@ -33,10 +33,12 @@ import {
   getResetPasswordSuccess,
   getResetPasswordFailed,
 } from "../services/actions/user";
-import { IUserReq, TFetchOptions } from "../services/types/data";
-import type { AppDispatch } from "../services/types/data";
+import { TUserReq, TFetchOptions } from "../services/types/data";
+import type { AppDispatch } from "../services/types";
 
 export const baseUrl = "https://norma.nomoreparties.space/api";
+export const wsUrl = "wss://norma.nomoreparties.space/orders/all";
+export const wsAuthUrl = "wss://norma.nomoreparties.space/orders";
 
 const apiUrls = {
   ingredients: `${baseUrl}/ingredients`,
@@ -131,7 +133,7 @@ export const fetchWithRefresh = async (url: string, options: TFetchOptions) => {
   }
 };
 
-export function loginRequest(form: Partial<IUserReq>) {
+export function loginRequest(form: Partial<TUserReq>) {
   return function (dispatch: AppDispatch) {
     dispatch(getLoginRequest());
     fetch(apiUrls.login, {
@@ -191,7 +193,7 @@ export function logoutRequest(refreshToken: string | undefined) {
   };
 }
 
-export function registrationRequest(form: IUserReq) {
+export function registrationRequest(form: TUserReq) {
   return function (dispatch: AppDispatch) {
     dispatch(getRegistrationRequest());
     fetch(apiUrls.register, {
@@ -299,7 +301,7 @@ export function getUserDataRequest() {
   };
 }
 
-export function updateUserDataRequest(form: IUserReq) {
+export function updateUserDataRequest(form: TUserReq) {
   return async function (dispatch: AppDispatch): Promise<void> {
     dispatch(getUserRequest());
     return fetchWithRefresh(apiUrls.userData, {

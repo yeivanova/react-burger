@@ -3,15 +3,25 @@ import {
   GET_ORDER_SUCCESS,
   GET_ORDER_FAILED,
   NUMBER_RESET,
-} from "../actions/order";
+} from "../constants/order";
+import { TOrderActions } from "../actions/order";
 
-const initialState = {
+type TOrderState = {
+  number: number | null;
+  numberRequest: boolean;
+  numberFailed: boolean;
+};
+
+const initialState: TOrderState = {
   number: null,
   numberRequest: false,
   numberFailed: false,
 };
 
-export const orderReducer = (state = initialState, action) => {
+export const orderReducer = (
+  state: TOrderState = initialState,
+  action: TOrderActions
+): TOrderState => {
   switch (action.type) {
     case GET_ORDER_REQUEST: {
       return {
@@ -22,7 +32,7 @@ export const orderReducer = (state = initialState, action) => {
     case GET_ORDER_SUCCESS: {
       return {
         ...state,
-        number: action.number,
+        number: action.payload,
         numberRequest: false,
       };
     }

@@ -6,7 +6,6 @@ import {
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
-  CLEAR_USER_DATA,
   AUTHENTICATE_USER,
   UNAUTHENTICATE_USER,
   GET_LOGIN_REQUEST,
@@ -26,9 +25,46 @@ import {
   GET_RESET_PASSWORD_SUCCESS,
   GET_RESET_PASSWORD_FAILED,
   IS_PASSWORD_RESETED,
-} from "../actions/user";
+} from "../constants/user";
+import { TUserReq } from "../types/data";
+import { TUserActions } from "../actions/user";
 
-const userState = {
+type TUserState = {
+  userData: TUserReq;
+  userDataRequest: {
+    userRequest: boolean;
+    userFailed: boolean;
+  };
+  userDataUpdateRequest: {
+    userRequest: boolean;
+    userFailed: boolean;
+  };
+  login: {
+    loginRequest: boolean;
+    loginFailed: boolean;
+  };
+  logout: {
+    logoutRequest: boolean;
+    logoutFailed: boolean;
+  };
+  registration: {
+    registrationRequest: boolean;
+    registrationFailed: boolean;
+  };
+  forgotPassword: {
+    forgotPasswordRequest: boolean;
+    forgotPasswordFailed: boolean;
+    isTokenRequested: boolean;
+  };
+  resetPassword: {
+    resetPasswordRequest: boolean;
+    resetPasswordFailed: boolean;
+    isPasswordReseted: boolean;
+  };
+  isAuthenticated: boolean;
+};
+
+const userState: TUserState = {
   userData: {
     name: null,
     email: null,
@@ -68,7 +104,10 @@ const userState = {
     typeof getCookie("refreshToken") === "undefined" ? false : true,
 };
 
-export const userReducer = (state = userState, action) => {
+export const userReducer = (
+  state: TUserState = userState,
+  action: TUserActions
+): TUserState => {
   switch (action.type) {
     case AUTHENTICATE_USER: {
       return {
@@ -80,12 +119,6 @@ export const userReducer = (state = userState, action) => {
       return {
         ...state,
         isAuthenticated: false,
-      };
-    }
-    case CLEAR_USER_DATA: {
-      return {
-        ...state,
-        userData: userState,
       };
     }
     case GET_LOGIN_REQUEST: {
@@ -104,7 +137,7 @@ export const userReducer = (state = userState, action) => {
           ...state.login,
           loginRequest: false,
         },
-        userData: action.user,
+        userData: action.payload,
       };
     }
     case GET_LOGIN_FAILED: {
@@ -162,7 +195,7 @@ export const userReducer = (state = userState, action) => {
           ...state.registration,
           registrationRequest: false,
         },
-        userData: action.user,
+        userData: action.payload,
       };
     }
     case GET_REGISTRATION_FAILED: {
@@ -244,6 +277,7 @@ export const userReducer = (state = userState, action) => {
       return {
         ...state,
         resetPassword: {
+          ...state.resetPassword,
           resetPasswordFailed: true,
           resetPasswordRequest: false,
         },
@@ -265,7 +299,7 @@ export const userReducer = (state = userState, action) => {
           ...state.userDataRequest,
           userRequest: false,
         },
-        userData: action.user,
+        userData: action.payload,
       };
     }
     case GET_USER_FAILED: {
@@ -289,7 +323,7 @@ export const userReducer = (state = userState, action) => {
     case UPDATE_USER_SUCCESS: {
       return {
         ...state,
-        userData: action.user,
+        userData: action.payload,
         userDataUpdateRequest: {
           ...state.userDataUpdateRequest,
           userRequest: false,

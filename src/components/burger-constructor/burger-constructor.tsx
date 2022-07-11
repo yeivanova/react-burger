@@ -6,8 +6,7 @@ import { PriceBlock } from "../price-block/price-block";
 import { OrderDetails } from "../order-details/order-details";
 import { Modal } from "../modal/modal";
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
-
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "../../services/hooks";
 import { useDrop } from "react-dnd";
 import {
   addItem,
@@ -29,7 +28,7 @@ export const BurgerConstructor: FC = () => {
   const history = useHistory();
 
   const { cartItems, bunItem, orderNumber, isAuthenticated } = useSelector(
-    (store: any) => ({
+    (store) => ({
       cartItems: store.cartItems.cartItems,
       bunItem: store.cartItems.bunItem,
       orderNumber: store.order.number,
@@ -40,12 +39,14 @@ export const BurgerConstructor: FC = () => {
   const totalPrice = useMemo(() => {
     return (
       (bunItem !== null ? bunItem.price * 2 : 0) +
-      cartItems.reduce((sum: number, val: TIngredient) => sum + val.price, 0)
+      cartItems.reduce((sum, val) => sum + val.price, 0)
     );
   }, [bunItem, cartItems]);
 
   const moveItem = (item: IDragItem): void => {
-    item.item.type === "bun" ? dispatch(setBun(item)) : dispatch(addItem(item));
+    item.item.type === "bun"
+      ? dispatch(setBun(item.item))
+      : dispatch(addItem(item.item));
   };
 
   const [{ isHover }, dropTarget] = useDrop({
@@ -76,12 +77,12 @@ export const BurgerConstructor: FC = () => {
       history.replace({ pathname: `/login` });
       return;
     }
-    const orderContent = [
-      ...cartItems.map((item: TIngredient) => item._id),
-      bunItem._id,
-    ];
-    dispatch<any>(getOrder(orderContent));
-    openModal();
+    if (bunItem !== null) {
+      const orderContent = [...cartItems.map((item) => item._id), bunItem._id];
+
+      dispatch(getOrder(orderContent));
+      openModal();
+    }
   };
 
   const moveCard = (dragIndex: number, hoverIndex: number) => {
@@ -108,7 +109,7 @@ export const BurgerConstructor: FC = () => {
               isLocked={true}
             />
           )}
-          {cartItems.map((item: TIngredient, index: number) => (
+          {cartItems.map((item, index) => (
             <ConstructorItem
               item={item}
               isLocked={false}

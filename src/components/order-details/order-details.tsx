@@ -2,14 +2,14 @@ import React, { FC } from "react";
 import styles from "./order-details.module.scss";
 import doneImg from "../../images/done.png";
 import { Preloader } from "../preloader/preloader";
-import { useSelector } from "react-redux";
+import { useSelector } from "../../services/hooks";
 
 type TOrderDetailsProps = {
-  orderNumber: number;
+  orderNumber: number | null;
 };
 
 export const OrderDetails: FC<TOrderDetailsProps> = (orderNumber) => {
-  const { numberRequest, numberFailed } = useSelector((store: any) => ({
+  const { numberRequest, numberFailed } = useSelector((store) => ({
     numberRequest: store.order.numberRequest,
     numberFailed: store.order.numberFailed,
   }));
@@ -28,7 +28,7 @@ export const OrderDetails: FC<TOrderDetailsProps> = (orderNumber) => {
             <span
               className={`${styles.order_number} text text_type_digits-large mb-8`}
             >
-              {orderNumber}
+              {orderNumber.orderNumber}
             </span>
             идентификатор заказа
           </p>

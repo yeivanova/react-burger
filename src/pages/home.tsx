@@ -3,12 +3,12 @@ import { BurgerIngredients } from "../components/burger-ingredients/burger-ingre
 import { BurgerConstructor } from "../components/burger-constructor/burger-constructor";
 import { Preloader } from "../components/preloader/preloader";
 import styles from "./home.module.scss";
-import { useSelector } from "react-redux";
+import { useSelector } from "../services/hooks";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 export const HomePage: FC = () => {
-  const { itemsRequest, itemsFailed } = useSelector((store: any) => ({
+  const { itemsRequest, itemsFailed } = useSelector((store) => ({
     itemsRequest: store.ingredients.itemsRequest,
     itemsFailed: store.ingredients.itemsFailed,
   }));

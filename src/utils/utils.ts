@@ -1,3 +1,31 @@
+import moment from "moment";
+
+export function getDateFormat(orderDateString: string): string {
+  let now = moment().utc();
+  let orderDate = moment(orderDateString);
+  let isToday = orderDate.isSame(now, "day");
+  let isYestoday = orderDate.isSame(now.subtract(1, "days"), "day");
+  let isTwoDaysAgo = orderDate.isSame(now.subtract(2, "days"), "day");
+
+  let newStr = "";
+  let offset = orderDate.utcOffset() / 60;
+
+  if (isToday) {
+    newStr = "Сегодня";
+  } else if (isYestoday) {
+    newStr = "Вчера";
+  } else if (isTwoDaysAgo) {
+    newStr = "2 дня назад";
+  } else {
+    newStr = orderDate.format("DD.MM.YYYY");
+  }
+
+  newStr = `${newStr}, ${orderDate.format("HH:mm")} i-GMT${
+    offset > 0 ? "+" : "-"
+  }${offset}`;
+  return newStr;
+}
+
 export function checkResponse(res: Response): Promise<any> {
   if (res.ok) {
     return res.json();

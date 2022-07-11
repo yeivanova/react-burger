@@ -5,11 +5,11 @@ import { Preloader } from "../components/preloader/preloader";
 import { IngredientDetails } from "../components/ingredient-details/ingredient-details";
 import styles from "./ingredient.module.scss";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector } from "../services/hooks";
 import { TLocationState } from "../services/types/data";
 
 export const IngredientPage: FC = () => {
-  const { items, itemsRequest, itemsFailed } = useSelector((store: any) => ({
+  const { items, itemsRequest, itemsFailed } = useSelector((store) => ({
     items: store.ingredients.items,
     itemsRequest: store.ingredients.itemsRequest,
     itemsFailed: store.ingredients.itemsFailed,

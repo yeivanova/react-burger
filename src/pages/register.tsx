@@ -5,12 +5,12 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "../services/hooks";
 import { registrationRequest } from "../utils/api";
 import { useFormAndValidation } from "../hooks/useFormAndValidation";
 
 export const RegisterPage: FC = () => {
-  const { isAuthenticated } = useSelector((store: any) => ({
+  const { isAuthenticated } = useSelector((store) => ({
     isAuthenticated: store.user.isAuthenticated,
   }));
 
@@ -20,7 +20,7 @@ export const RegisterPage: FC = () => {
   const register = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      dispatch<any>(
+      dispatch(
         registrationRequest(
           values as { name: string; email: string; password: string }
         )
