@@ -11,7 +11,6 @@ import styles from "./burger-ingredients.module.scss";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { changeTab } from "../../services/actions/ingredients";
-import { TIngredient } from "../../services/types/data";
 
 type TCounter = {
   [_id: string]: number;

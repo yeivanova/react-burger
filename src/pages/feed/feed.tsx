@@ -1,14 +1,14 @@
 import React, { FC, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Preloader } from "../components/preloader/preloader";
-import { OrderItem } from "../components/order-item/order-item";
-import { OrdersInfo } from "../components/orders-info/orders-info";
+import { Preloader } from "../../components/preloader/preloader";
+import { OrderItem } from "../../components/order-item/order-item";
+import { OrdersInfo } from "../../components/orders-info/orders-info";
 import styles from "./feed.module.scss";
-import { useSelector, useDispatch } from "../services/hooks";
+import { useSelector, useDispatch } from "../../services/hooks";
 import {
   WsOrderConnectionStart,
   WsOrderConnectionClosed,
-} from "../services/actions/ws";
+} from "../../services/actions/ws";
 import { v4 as uuid } from "uuid";
 
 export const FeedPage: FC = () => {
@@ -66,7 +66,7 @@ export const FeedPage: FC = () => {
                             state: { isModalOrder: location },
                           }}
                         >
-                          <OrderItem item={item} key={uuid()} />
+                          <OrderItem orderItem={item} key={uuid()} />
                         </Link>
                       </li>
                     ))}

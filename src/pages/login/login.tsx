@@ -7,10 +7,10 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "../services/hooks";
-import { loginRequest } from "../utils/api";
-import { TLocationState } from "../services/types/data";
-import { useFormAndValidation } from "../hooks/useFormAndValidation";
+import { useSelector, useDispatch } from "../../services/hooks";
+import { loginRequest } from "../../utils/api";
+import { TLocationState } from "../../services/types/data";
+import { useFormAndValidation } from "../../hooks/useFormAndValidation";
 
 export const LoginPage: FC = () => {
   const { isAuthenticated } = useSelector((store) => ({

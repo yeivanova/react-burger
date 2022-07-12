@@ -5,9 +5,9 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector, useDispatch } from "../services/hooks";
-import { registrationRequest } from "../utils/api";
-import { useFormAndValidation } from "../hooks/useFormAndValidation";
+import { useSelector, useDispatch } from "../../services/hooks";
+import { registrationRequest } from "../../utils/api";
+import { useFormAndValidation } from "../../hooks/useFormAndValidation";
 
 export const RegisterPage: FC = () => {
   const { isAuthenticated } = useSelector((store) => ({

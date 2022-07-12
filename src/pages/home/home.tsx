@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { BurgerIngredients } from "../components/burger-ingredients/burger-ingredients";
-import { BurgerConstructor } from "../components/burger-constructor/burger-constructor";
-import { Preloader } from "../components/preloader/preloader";
+import { BurgerIngredients } from "../../components/burger-ingredients/burger-ingredients";
+import { BurgerConstructor } from "../../components/burger-constructor/burger-constructor";
+import { Preloader } from "../../components/preloader/preloader";
 import styles from "./home.module.scss";
-import { useSelector } from "../services/hooks";
+import { useSelector } from "../../services/hooks";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 

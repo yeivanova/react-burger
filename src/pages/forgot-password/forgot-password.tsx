@@ -6,11 +6,11 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "../services/hooks";
-import { isPasswordRequested } from "../services/actions/user";
-import { passwordForgotRequest } from "../utils/api";
-import { useFormAndValidation } from "../hooks/useFormAndValidation";
-import { TLocationState } from "../services/types/data";
+import { useSelector, useDispatch } from "../../services/hooks";
+import { isPasswordRequested } from "../../services/actions/user";
+import { passwordForgotRequest } from "../../utils/api";
+import { useFormAndValidation } from "../../hooks/useFormAndValidation";
+import { TLocationState } from "../../services/types/data";
 
 export const ForgotPasswordPage: FC = () => {
   const { isTokenRequested, isAuthenticated } = useSelector((store) => ({

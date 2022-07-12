@@ -1,13 +1,12 @@
-import React, { FC, useMemo, useEffect } from "react";
+import React, { FC, useMemo } from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./order-item.module.scss";
 import { useSelector } from "../../services/hooks";
-import { TIngredient } from "../../services/types/data";
 import { v4 as uuid } from "uuid";
 import { getDateFormat } from "../../utils/utils";
 
 type TOrderDetailsProps = {
-  item: {
+  orderItem: {
     name: string;
     ingredients: string[];
     _id: string;
@@ -18,38 +17,44 @@ type TOrderDetailsProps = {
   };
 };
 
-export const OrderItem: FC<TOrderDetailsProps> = ({ item }) => {
+export const OrderItem: FC<TOrderDetailsProps> = ({ orderItem }) => {
   const { items } = useSelector((store) => ({
     items: store.ingredients.items,
   }));
 
-  const orderItems = item.ingredients
-    .slice(0, 6)
-    .map((id) => items.filter((el) => el._id === id))
-    .flat();
-  const lastIteem = orderItems.pop();
-  const quantity = item.ingredients.length - orderItems.length - 1;
+  const orderInfo = useMemo(() => {
+    if (!items.length) return null;
+    const orderItems = orderItem.ingredients
+      .slice(0, 6)
+      .map((id) => items.filter((el) => el._id === id))
+      .flat();
+    const lastIteem = orderItems.pop();
+    const quantity = orderItem.ingredients.length - orderItems.length - 1;
 
-  const orderPrice = useMemo(() => {
-    const order = item.ingredients
+    const order = orderItem.ingredients
       .map((id) => items.filter((el) => el._id === id))
       .flat();
 
-    return order.reduce((sum, val) => sum + val.price, 0);
-  }, [item.ingredients, items]);
+    const orderPrice = order.reduce((sum, val) => sum + val.price, 0);
+    return { ...orderItem, orderItems, lastIteem, quantity, order, orderPrice };
+  }, [orderItem, items]);
+
+  if (!orderInfo) return null;
 
   return (
     <>
       <div className={`${styles.info} mb-6`}>
-        <span className="text text_type_digits-default">#{item.number}</span>
+        <span className="text text_type_digits-default">
+          #{orderItem.number}
+        </span>
         <span className="text text_type_main-default text_color_inactive">
-          {getDateFormat(item.createdAt)}
+          {getDateFormat(orderItem.createdAt)}
         </span>
       </div>
-      <p className="text text_type_main-medium mb-2">{item.name}</p>
-      {typeof item.status !== "undefined" && (
-        <div className={`${item.status === "done" && styles.done} mb-6`}>
-          {item.status === "done"
+      <p className="text text_type_main-medium mb-2">{orderItem.name}</p>
+      {typeof orderItem.status !== "undefined" && (
+        <div className={`${orderItem.status === "done" && styles.done} mb-6`}>
+          {orderItem.status === "done"
             ? "Выполнен"
             : "pending"
             ? "Готовится"
@@ -58,7 +63,7 @@ export const OrderItem: FC<TOrderDetailsProps> = ({ item }) => {
       )}
       <div className={styles.info}>
         <ul className={styles.order_preview}>
-          {orderItems.map((ingredient) => (
+          {orderInfo.orderItems.map((ingredient) => (
             <li className={styles.preview_item} key={uuid()}>
               <img
                 className={styles.preview_img}
@@ -69,19 +74,22 @@ export const OrderItem: FC<TOrderDetailsProps> = ({ item }) => {
           ))}
           <li
             className={`${styles.preview_item} ${
-              quantity !== 6 && styles.preview_item_last
+              orderInfo.quantity !== 6 && styles.preview_item_last
             }`}
           >
-            <img src={lastIteem!.image_mobile} alt={lastIteem!.name} />
+            <img
+              src={orderInfo.lastIteem!.image_mobile}
+              alt={orderInfo.lastIteem!.name}
+            />
             <span
               className={`${styles.more_items} text text_type_main-default`}
             >
-              {quantity > 0 && `+${quantity}`}
+              {orderInfo.quantity > 0 && `+${orderInfo.quantity}`}
             </span>
           </li>
         </ul>
         <span className="text text_type_digits-default">
-          {orderPrice} <CurrencyIcon type="primary" />
+          {orderInfo.orderPrice} <CurrencyIcon type="primary" />
         </span>
       </div>
     </>

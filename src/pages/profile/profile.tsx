@@ -2,16 +2,16 @@ import React, { FC, useEffect } from "react";
 import { Link, useLocation, Switch, useRouteMatch } from "react-router-dom";
 import styles from "./profile.module.scss";
 import { v4 as uuid } from "uuid";
-import { ProfileMenu } from "../components/profile-menu/profile-menu";
-import { ProtectedRoute } from "../components/protected-route/protected-route";
-import { OrderItem } from "../components/order-item/order-item";
-import { ProfileForm } from "../components/profile-form/profile-form";
-import { Preloader } from "../components/preloader/preloader";
-import { useSelector, useDispatch } from "../services/hooks";
+import { ProfileMenu } from "../../components/profile-menu/profile-menu";
+import { ProtectedRoute } from "../../components/protected-route/protected-route";
+import { OrderItem } from "../../components/order-item/order-item";
+import { ProfileForm } from "../../components/profile-form/profile-form";
+import { Preloader } from "../../components/preloader/preloader";
+import { useSelector, useDispatch } from "../../services/hooks";
 import {
   WsProfileConnectionStart,
   WsProfileConnectionClosed,
-} from "../services/actions/ws-auth";
+} from "../../services/actions/ws-auth";
 
 export const ProfilePage: FC = () => {
   const { wsConnected, orders, error } = useSelector((store) => ({
@@ -68,7 +68,7 @@ export const ProfilePage: FC = () => {
                               state: { isModalAuthOrder: location },
                             }}
                           >
-                            <OrderItem item={item} key={uuid()} />
+                            <OrderItem orderItem={item} key={uuid()} />
                           </Link>
                         </li>
                       ))}

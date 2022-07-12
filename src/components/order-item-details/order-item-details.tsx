@@ -5,8 +5,6 @@ import { Preloader } from "../preloader/preloader";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { v4 as uuid } from "uuid";
 import { useParams } from "react-router";
-import { TIngredient } from "../../services/types/data";
-import { TWsOrder } from "../../services/types/data";
 import {
   WsOrderConnectionStart,
   WsOrderConnectionClosed,
@@ -60,7 +58,7 @@ export const OrderItemDetails: FC<TOrderItemDetailsProps> = ({
         }
       };
     }
-  }, [dispatch, wsConnected]);
+  }, [dispatch, wsConnected, isAuthOrders]);
 
   let order, orderItems, total, element;
 
