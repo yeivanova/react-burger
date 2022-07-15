@@ -1,4 +1,12 @@
-import React, { FC, useEffect } from "react";
+import React, {
+  FC,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  SetStateAction,
+  MutableRefObject,
+} from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Preloader } from "../../components/preloader/preloader";
 import { OrderItem } from "../../components/order-item/order-item";
@@ -10,6 +18,8 @@ import {
   WsOrderConnectionClosed,
 } from "../../services/actions/ws";
 import { v4 as uuid } from "uuid";
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import { MobileContext } from "../../services/app-context";
 
 export const FeedPage: FC = () => {
   const { wsConnected, orders, error, total, totalToday } = useSelector(
@@ -22,6 +32,8 @@ export const FeedPage: FC = () => {
     })
   );
 
+  const { isMobile } = useContext(MobileContext);
+  const [currentTab, setCurrentTab] = useState("orders");
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -36,6 +48,37 @@ export const FeedPage: FC = () => {
     };
   }, [dispatch, wsConnected]);
 
+  const tabBlocks = Array.from(
+    document.getElementsByClassName(
+      "tabcontent"
+    ) as HTMLCollectionOf<HTMLElement>
+  );
+
+  useEffect(() => {
+    tabBlocks.forEach((tabBlock) => {
+      isMobile
+        ? tabBlock.classList.remove("visible")
+        : tabBlock.classList.add("visible");
+    });
+  }, []);
+
+  const ordersRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+
+  const changeTab = (
+    ref: MutableRefObject<HTMLDivElement | null>,
+    e: SetStateAction<string>
+  ): void => {
+    tabBlocks.forEach((tabBlock) => {
+      tabBlock.classList.remove("visible");
+    });
+    if (ref && ref.current) {
+      ref.current.classList.add("visible");
+    }
+
+    setCurrentTab(currentTab === "info" ? "orders" : "info");
+  };
+
   return (
     <>
       <div className={`${styles.page_container} pt-10 pl-4 pr-4`}>
@@ -47,12 +90,38 @@ export const FeedPage: FC = () => {
           <Preloader />
         ) : (
           <>
-            <div className={`${styles.column} pb-10`}>
+            <h1 className={`${styles.title} text text_type_main-large mb-5`}>
+              Лента заказов
+            </h1>
+            {isMobile && (
+              <>
+                <nav className={`${styles.tabs} mb-5`}>
+                  <Tab
+                    value="orders"
+                    active={currentTab === "orders"}
+                    onClick={(e) => changeTab(ordersRef, e)}
+                  >
+                    Заказы
+                  </Tab>
+                  <Tab
+                    value="info"
+                    active={currentTab === "info"}
+                    onClick={(e) => changeTab(infoRef, e)}
+                  >
+                    Статистика
+                  </Tab>
+                </nav>
+              </>
+            )}
+            <div
+              id="orders"
+              className={`${styles.column} pb-10 ${styles.tabcontent} ${
+                currentTab === "orders" ? styles.visible : ""
+              }`}
+              ref={ordersRef}
+            >
               <section className="pb-2">
-                <h2 className="text text_type_main-large mb-5">
-                  Лента заказов
-                </h2>
-                <div id="wrapper" className={`${styles.column_inner}`}>
+                <div className={`${styles.column_inner}`}>
                   <ul className={`${styles.orders_list}`}>
                     {orders.map((item) => (
                       <li
@@ -74,7 +143,13 @@ export const FeedPage: FC = () => {
                 </div>
               </section>
             </div>
-            <div className={`${styles.column} pl-5 pt-20 pb-10`}>
+            <div
+              id="info"
+              className={`${styles.column} pl-5 pb-10 ${styles.tabcontent} ${
+                currentTab === "info" ? styles.visible : ""
+              }`}
+              ref={infoRef}
+            >
               <OrdersInfo
                 orders={orders}
                 total={total}

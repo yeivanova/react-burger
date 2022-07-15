@@ -55,14 +55,14 @@ export const LoginPage: FC = () => {
         <Button type="primary" size="medium">
           Войти
         </Button>
-        <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
-          Вы — новый пользователь?&nbsp;
+        <p className="prompt_text text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
+          Вы — новый пользователь?{" "}
           <Link to={{ pathname: "/register" }} className="link">
             Зарегистрироваться
           </Link>
         </p>
         <p className="text text_type_main-default text_color_inactive">
-          Забыли пароль?&nbsp;
+          Забыли пароль?{" "}
           <Link to={{ pathname: "/forgot-password" }} className="link">
             Восстановить пароль
           </Link>

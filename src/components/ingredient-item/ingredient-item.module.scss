@@ -4,10 +4,15 @@
   flex-direction: column;
   flex: 1 1 0px;
   max-width: 272px;
+  text-align: center;
   cursor: pointer;
 
   &:hover {
     background: var(--background-color);
+  }
+
+  button {
+    font-family: Jet Brains Mono;
   }
 }
 
@@ -25,6 +30,13 @@
 .link {
   color: var(--text-primary-color);
   text-decoration: none;
+
+  & > div:first-child {
+    height: 24px;
+    padding: 0 4px;
+    font-size: 22px;
+    line-height: 24px;
+  }
 }
 
 .ingredient_name {
@@ -39,4 +51,23 @@
 
 .drag_effect {
   opacity: 0.5;
+}
+
+@media (max-width: 640px) {
+  .ingredient_image {
+    max-width: 144px;
+  }
+
+  .ingredient_name {
+    height: 60px;
+  }
+
+  .ingredient_price {
+    margin-bottom: 8px;
+
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
 }

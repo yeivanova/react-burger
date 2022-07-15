@@ -53,7 +53,7 @@ export const OrderItem: FC<TOrderDetailsProps> = ({ orderItem }) => {
       </div>
       <p className="text text_type_main-medium mb-2">{orderItem.name}</p>
       {typeof orderItem.status !== "undefined" && (
-        <div className={`${orderItem.status === "done" && styles.done} mb-6`}>
+        <div className={`${orderItem.status === "done" && styles.done} ${styles.status} mb-6`}>
           {orderItem.status === "done"
             ? "Выполнен"
             : "pending"

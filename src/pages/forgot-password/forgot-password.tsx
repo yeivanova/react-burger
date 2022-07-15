@@ -62,7 +62,7 @@ export const ForgotPasswordPage: FC = () => {
         <Button type="primary" size="medium">
           Восстановить
         </Button>
-        <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
+        <p className="prompt_text text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
           Вспомнили пароль?&nbsp;
           <Link to={{ pathname: "/login" }} className="link">
             Войти

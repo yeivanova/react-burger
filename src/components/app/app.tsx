@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useState, useContext, useEffect } from "react";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { getUserDataRequest } from "../../utils/api";
 import {
@@ -27,6 +27,7 @@ import { IngredientDetails } from "../ingredient-details/ingredient-details";
 import { OrderItemDetails } from "../order-item-details/order-item-details";
 import { loadData } from "../../utils/api";
 import { Location } from "history";
+import { MobileContext } from "../../services/app-context";
 
 const Main: FC = () => {
   const { isAuthenticated } = useSelector((store) => ({
@@ -57,6 +58,9 @@ const Main: FC = () => {
   const isModalOrder = location.state && location.state.isModalOrder;
   const isModalAuthOrder = location.state && location.state.isModalAuthOrder;
   const closeModal = () => history.goBack();
+
+  const isMobile = useContext(MobileContext);
+  //console.log(isMobile);
 
   return (
     <div className="app">
@@ -126,9 +130,34 @@ const Main: FC = () => {
 };
 
 export const App: FC = () => {
+  const [isMobile, setIsMobile] = React.useState<boolean>(false);
+  const [windowDimension, setWindowDimension] = useState<number | null>(null);
+
+  useEffect(() => {
+    setWindowDimension(window.innerWidth);
+    windowDimension && windowDimension <= 640
+      ? setIsMobile(true)
+      : setIsMobile(false);
+  }, [windowDimension, isMobile]);
+
+  useEffect(() => {
+    function handleWindowResize() {
+      setWindowDimension(window.innerWidth);
+    }
+
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
   return (
     <BrowserRouter>
-      <Main />
+      <MobileContext.Provider
+        value={{ isMobile: isMobile, changeIsMobile: setIsMobile }}
+      >
+        <Main />
+      </MobileContext.Provider>
     </BrowserRouter>
   );
 };

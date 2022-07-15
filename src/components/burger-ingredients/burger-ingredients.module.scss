@@ -17,7 +17,20 @@ h1 {
 }
 
 @media (max-width: 640px) {
+  h1 {
+    text-align: center;
+  }
+
+  .column_inner {
+    max-height: none;
+    padding: 0 8px;
+    margin-top: 20px;
+  }
+
   .tabs > div {
     min-width: 106px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
   }
 }

@@ -47,8 +47,13 @@
 }
 
 @media (max-width: 640px) {
+  .page_container {
+    padding: 0;
+  }
+
   .column {
     max-width: 100%;
+    min-width: auto;
   }
 
   .page-container {

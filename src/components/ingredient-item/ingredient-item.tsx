@@ -1,12 +1,14 @@
-import React, { FC, MouseEventHandler } from "react";
-import styles from "./ingredient-item.module.scss";
+import React, { FC, useContext, MouseEventHandler } from "react";
 import {
   CurrencyIcon,
   Counter,
+  Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import styles from "./ingredient-item.module.scss";
 import { Link, useLocation } from "react-router-dom";
 import { useDrag } from "react-dnd";
 import { TIngredient } from "../../services/types/data";
+import { MobileContext } from "../../services/app-context";
 
 type TProps = {
   item: TIngredient;
@@ -19,6 +21,7 @@ export const IngredientItem: FC<TProps> = ({
   customClickEvent,
   count,
 }) => {
+  const { isMobile } = useContext(MobileContext);
   const location = useLocation();
   const [{ dragEffect }, ref] = useDrag({
     type: "items",
@@ -52,7 +55,7 @@ export const IngredientItem: FC<TProps> = ({
           alt={item.name}
         />
         <div
-          className={`${styles.ingredient_price} text_type_digits-default mt-1 mb-1`}
+          className={`${styles.ingredient_price} text text_type_digits-default mt-1 mb-1`}
         >
           {item.price} <CurrencyIcon type="primary" />
         </div>
@@ -62,6 +65,11 @@ export const IngredientItem: FC<TProps> = ({
           {item.name}
         </div>
       </Link>
+      {isMobile && (
+        <Button type="secondary" size="small">
+          Добавить
+        </Button>
+      )}
     </li>
   );
 };

@@ -29,19 +29,6 @@
   }
 }
 
-.form {
-  width: 100%;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  .input__textfield {
-    color: var(--text-inactive-color);
-  }
-}
-
 .button_row {
   display: flex;
   flex-direction: row;
@@ -70,6 +57,34 @@
   }
 }
 
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  flex: 0 1 320px;
+  width: 50%;
+  max-width: 320px;
+  box-sizing: border-box;
+  text-align: left;
+
+  a,
+  button {
+    padding: 17px 0;
+  }
+
+  button {
+    font-family: "Jet Brains Mono";
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 1.25;
+  }
+
+  p {
+    opacity: 0.4;
+  }
+}
+
 @media (min-width: 641px) {
   .form {
     .input_size_default {
@@ -79,12 +94,20 @@
 }
 
 @media (max-width: 640px) {
+  .page_container {
+    padding: 16px 8px;
+  }
+
   .column {
     max-width: 100%;
   }
 
   .column_inner {
     max-height: initial;
+
+    ul {
+      padding: 0;
+    }
   }
 
   .button_row {
