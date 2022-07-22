@@ -20,12 +20,12 @@
 .item_bun {
   &:first-of-type {
     position: absolute;
-    top: 100px;
+    top: -96px;
   }
 
   &:last-of-type {
     position: absolute;
-    bottom: 40px;
+    bottom: -96px;
   }
 }
 
@@ -34,9 +34,13 @@
 }
 
 @media only screen and (max-width: 767px) {
-  .list_item > div {
-    height: auto;
-    --rstdiHeight: auto !important;
+  .list_item {
+    width: 100%;
+
+    & > div {
+      height: auto;
+      --rstdiHeight: auto !important;
+    }
   }
 
   .mobile_item {

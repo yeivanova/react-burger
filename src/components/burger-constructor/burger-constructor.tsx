@@ -104,15 +104,16 @@ export const BurgerConstructor: FC = () => {
     <>
       {isMobile && totalPrice !== 0 && (
         <div className={styles.see_order}>
-          <PriceBlock total={totalPrice}>{}</PriceBlock>
-          <Button
-            onClick={() => {
-              setIsConstructorExpanded(!isConstructorExpanded);
-              document.body.classList.add("no-scroll");
-            }}
-          >
-            Смотреть заказ
-          </Button>
+          <PriceBlock total={totalPrice}>
+            <Button
+              onClick={() => {
+                setIsConstructorExpanded(!isConstructorExpanded);
+                document.body.classList.add("no-scroll");
+              }}
+            >
+              Смотреть заказ
+            </Button>
+          </PriceBlock>
         </div>
       )}
       <div
