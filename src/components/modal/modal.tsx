@@ -1,8 +1,15 @@
-import React, { FC, ReactNode, useCallback, useEffect } from "react";
+import React, {
+  FC,
+  ReactNode,
+  useContext,
+  useCallback,
+  useEffect,
+} from "react";
 import ReactDOM from "react-dom";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ModalOverlay } from "../modal-overlay/modal-overlay";
 import styles from "./modal.module.scss";
+import { MobileContext } from "../../services/app-context";
 
 const modalRoot = document.getElementById("react-modals") as
   | Element
@@ -15,9 +22,16 @@ type TModalProps = {
 };
 
 export const Modal: FC<TModalProps> = ({ closeMe, children, title = "" }) => {
+  const { isMobile } = useContext(MobileContext);
+
   const closeModal = useCallback(() => {
     closeMe();
+    document.body.classList.remove("no-scroll");
   }, [closeMe]);
+
+  useEffect(() => {
+    document.body.classList.add("no-scroll");
+  }, []);
 
   useEffect(() => {
     const close = (e: KeyboardEvent) => {
@@ -32,10 +46,13 @@ export const Modal: FC<TModalProps> = ({ closeMe, children, title = "" }) => {
   return ReactDOM.createPortal(
     <>
       <div className={`${styles.modal_window}`}>
-        <button className={`${styles.modal_close}`} onClick={closeModal}>
+        <button
+          className={`${styles.modal_close} modal_close`}
+          onClick={closeModal}
+        >
           <CloseIcon type="primary" />
         </button>
-        {title !== "" && (
+        {!isMobile && title !== "" && (
           <p
             className={`${styles.modal_header} text text_type_main-large pt-10 pl-10 pr-10`}
           >

@@ -32,3 +32,49 @@
 .drag_effect {
   opacity: 0.1;
 }
+
+@media only screen and (max-width: 767px) {
+  .list_item > div {
+    height: auto;
+    --rstdiHeight: auto !important;
+  }
+
+  .mobile_item {
+    position: relative;
+    width: 100%;
+    padding-left: 16px;
+    background-color: var(--background-alt);
+    box-sizing: border-box;
+
+    & > svg {
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-8px);
+    }
+  }
+
+  .mobile_item_inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    box-shadow: inset 0px -1px 0px var(--background-element);
+    box-sizing: border-box;
+  }
+
+  .mobile_item_img {
+    max-height: 40px;
+    margin: 0 -5px;
+  }
+
+  .mobile_item_name {
+    max-width: 48%;
+  }
+
+  .mobile_item_price {
+    margin-left: auto;
+  }
+}

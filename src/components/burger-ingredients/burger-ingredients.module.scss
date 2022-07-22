@@ -16,7 +16,7 @@ h1 {
   }
 }
 
-@media (max-width: 640px) {
+@media only screen and (max-width: 767px) {
   h1 {
     text-align: center;
   }

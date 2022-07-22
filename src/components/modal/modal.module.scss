@@ -35,3 +35,23 @@
   margin: 7px 0;
   text-align: left;
 }
+
+@media only screen and (max-width: 767px) {
+  .modal_window {
+    max-width: none;
+    height: 100vh;
+    min-height: auto;
+    top: 0;
+    left: 0;
+    transform: none;
+    border-radius: 0;
+    background: var(--background-alt);
+    overflow: auto;
+  }
+
+  .modal_close {
+    top: 20px;
+    right: 8px;
+    background: var(--background-alt);
+  }
+}

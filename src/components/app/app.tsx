@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { getUserDataRequest } from "../../utils/api";
 import {
@@ -45,6 +45,7 @@ const Main: FC = () => {
   useEffect(() => {
     initUser();
     dispatch(loadData());
+    document.body.classList.remove("no-scroll");
   }, [dispatch]);
 
   const history = useHistory();
@@ -58,9 +59,6 @@ const Main: FC = () => {
   const isModalOrder = location.state && location.state.isModalOrder;
   const isModalAuthOrder = location.state && location.state.isModalAuthOrder;
   const closeModal = () => history.goBack();
-
-  const isMobile = useContext(MobileContext);
-  //console.log(isMobile);
 
   return (
     <div className="app">
@@ -135,7 +133,7 @@ export const App: FC = () => {
 
   useEffect(() => {
     setWindowDimension(window.innerWidth);
-    windowDimension && windowDimension <= 640
+    windowDimension && windowDimension <= 767
       ? setIsMobile(true)
       : setIsMobile(false);
   }, [windowDimension, isMobile]);
@@ -152,7 +150,7 @@ export const App: FC = () => {
     };
   }, []);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/react-burger">
       <MobileContext.Provider
         value={{ isMobile: isMobile, changeIsMobile: setIsMobile }}
       >

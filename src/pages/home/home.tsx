@@ -1,17 +1,21 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { BurgerIngredients } from "../../components/burger-ingredients/burger-ingredients";
 import { BurgerConstructor } from "../../components/burger-constructor/burger-constructor";
 import { Preloader } from "../../components/preloader/preloader";
 import styles from "./home.module.scss";
 import { useSelector } from "../../services/hooks";
+import { TouchBackend } from "react-dnd-touch-backend";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { MobileContext } from "../../services/app-context";
 
 export const HomePage: FC = () => {
   const { itemsRequest, itemsFailed } = useSelector((store) => ({
     itemsRequest: store.ingredients.itemsRequest,
     itemsFailed: store.ingredients.itemsFailed,
   }));
+
+  const { isMobile } = useContext(MobileContext);
 
   return (
     <>
@@ -23,7 +27,7 @@ export const HomePage: FC = () => {
         ) : itemsRequest ? (
           <Preloader />
         ) : (
-          <DndProvider backend={HTML5Backend}>
+          <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
             <div className={`${styles.column} pb-10`}>
               <BurgerIngredients />
             </div>

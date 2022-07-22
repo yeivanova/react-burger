@@ -74,7 +74,14 @@
   }
 }
 
-@media (max-width: 640px) {
+@media only screen and (max-width: 1279px) {
+  .form {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
   .sidebar {
     max-width: 100%;
   }

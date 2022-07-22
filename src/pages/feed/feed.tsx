@@ -22,11 +22,11 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { MobileContext } from "../../services/app-context";
 
 export const FeedPage: FC = () => {
-  const { wsConnected, orders, error, total, totalToday } = useSelector(
+  const { wsConnected, orders, isError, total, totalToday } = useSelector(
     (store) => ({
       wsConnected: store.ws.wsConnected,
       orders: store.ws.orders,
-      error: store.ws.error,
+      isError: store.ws.isError,
       total: store.ws.total,
       totalToday: store.ws.totalToday,
     })
@@ -82,7 +82,7 @@ export const FeedPage: FC = () => {
   return (
     <>
       <div className={`${styles.page_container} pt-10 pl-4 pr-4`}>
-        {error ? (
+        {isError ? (
           <div className="text text_type_main-large mt-10 mb-5">
             Ошибка при загрузке данных.
           </div>
@@ -90,9 +90,6 @@ export const FeedPage: FC = () => {
           <Preloader />
         ) : (
           <>
-            <h1 className={`${styles.title} text text_type_main-large mb-5`}>
-              Лента заказов
-            </h1>
             {isMobile && (
               <>
                 <nav className={`${styles.tabs} mb-5`}>
@@ -120,6 +117,9 @@ export const FeedPage: FC = () => {
               }`}
               ref={ordersRef}
             >
+              <h1 className={`${styles.title} text text_type_main-large mb-5`}>
+                Лента заказов
+              </h1>
               <section className="pb-2">
                 <div className={`${styles.column_inner}`}>
                   <ul className={`${styles.orders_list}`}>
@@ -145,9 +145,9 @@ export const FeedPage: FC = () => {
             </div>
             <div
               id="info"
-              className={`${styles.column} pl-5 pb-10 ${styles.tabcontent} ${
-                currentTab === "info" ? styles.visible : ""
-              }`}
+              className={`${styles.column} pt-15 pl-5 pb-10 ${
+                styles.tabcontent
+              } ${currentTab === "info" ? styles.visible : ""}`}
               ref={infoRef}
             >
               <OrdersInfo

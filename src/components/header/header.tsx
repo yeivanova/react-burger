@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, FC } from "react";
+import React, { useState, useContext, FC } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styles from "./header.module.scss";
 import {
@@ -6,6 +6,9 @@ import {
   BurgerIcon,
   ListIcon,
   ProfileIcon,
+  MenuIcon,
+  CloseIcon,
+  ArrowUpIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import mobileLogo from "../../images/mobile-logo.svg";
 import { ProfileMenu } from "../profile-menu/profile-menu";
@@ -30,11 +33,7 @@ export const Header: FC = () => {
               document.body.classList.add("no-scroll");
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="6" width="18" height="2" rx="1" fill="#F2F2F3" />
-              <rect x="3" y="11" width="18" height="2" rx="1" fill="#F2F2F3" />
-              <rect x="3" y="16" width="18" height="2" rx="1" fill="#F2F2F3" />
-            </svg>
+            <MenuIcon type="primary" />
           </button>
           <div
             className={`${styles.navigation_menu} p-2 pt-4 ${
@@ -48,12 +47,7 @@ export const Header: FC = () => {
                 document.body.classList.remove("no-scroll");
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M3.29289 3.29289C3.68342 2.90237 4.31658 2.90237 4.70711 3.29289L12 10.5858L19.2929 3.29289C19.6834 2.90237 20.3166 2.90237 20.7071 3.29289C21.0976 3.68342 21.0976 4.31658 20.7071 4.70711L13.4142 12L20.7071 19.2929C21.0976 19.6834 21.0976 20.3166 20.7071 20.7071C20.3166 21.0976 19.6834 21.0976 19.2929 20.7071L12 13.4142L4.70711 20.7071C4.31658 21.0976 3.68342 21.0976 3.29289 20.7071C2.90237 20.3166 2.90237 19.6834 3.29289 19.2929L10.5858 12L3.29289 4.70711C2.90237 4.31658 2.90237 3.68342 3.29289 3.29289Z"
-                  fill="#F2F2F3"
-                />
-              </svg>
+              <CloseIcon type="primary" />
             </button>
             <p className="text text_type_main-large mb-4">Меню</p>
             <ul
@@ -64,7 +58,10 @@ export const Header: FC = () => {
                   to="/profile"
                   className={styles.mobile_link}
                   activeClassName={styles.button_state_current}
-                  onClick={() => setIsNavExpanded(false)}
+                  onClick={() => {
+                    setIsNavExpanded(false);
+                    document.body.classList.remove("no-scroll");
+                  }}
                 >
                   <ProfileIcon type="secondary" />
                   Личный кабинет
@@ -75,18 +72,16 @@ export const Header: FC = () => {
                   }`}
                   onClick={() => setIsDropDownExpanded(!isDropDownExpanded)}
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M10.9541 15.6475C11.5164 16.1175 12.4836 16.1175 13.0459 15.6475L17.6243 11.8214C18.4585 11.1242 17.8129 10 16.5783 10H7.42166C6.1871 10 5.54152 11.1242 6.37574 11.8214L10.9541 15.6475Z"
-                      fill="#F2F2F3"
-                    />
-                  </svg>
+                  <ArrowUpIcon type="primary" />
                 </div>
                 <div
                   className={`${styles.dropdown} ${
                     isDropDownExpanded ? styles.dopdown_expanded : ""
                   }`}
-                  onClick={() => setIsNavExpanded(false)}
+                  onClick={() => {
+                    setIsNavExpanded(false);
+                    document.body.classList.remove("no-scroll");
+                  }}
                 >
                   <ProfileMenu />
                 </div>
@@ -97,7 +92,10 @@ export const Header: FC = () => {
                   exact
                   className={styles.mobile_link}
                   activeClassName={styles.button_state_current}
-                  onClick={() => setIsNavExpanded(false)}
+                  onClick={() => {
+                    setIsNavExpanded(false);
+                    document.body.classList.remove("no-scroll");
+                  }}
                 >
                   <BurgerIcon type="secondary" />
                   Конструктор бургеров
@@ -108,7 +106,10 @@ export const Header: FC = () => {
                   to="/feed"
                   className={styles.mobile_link}
                   activeClassName={styles.button_state_current}
-                  onClick={() => setIsNavExpanded(false)}
+                  onClick={() => {
+                    setIsNavExpanded(false);
+                    document.body.classList.remove("no-scroll");
+                  }}
                 >
                   <ListIcon type="secondary" />
                   Лента заказов
@@ -149,6 +150,11 @@ export const Header: FC = () => {
           </ul>
           <Link to="/" className={styles.logo}>
             <Logo />
+            <img
+              className={`${styles.sm_logo}`}
+              src={mobileLogo}
+              alt="На главную"
+            />
           </Link>
           <ul
             className={`${styles.navigation_list} ${styles.navigation_list_right}`}

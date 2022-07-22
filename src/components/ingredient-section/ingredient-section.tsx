@@ -11,7 +11,7 @@ export const IngredientSection: FC<TIngredientSectionProps> = ({
   children,
 }) => {
   return (
-    <section className="pb-2 pr-2">
+    <section className={`${styles.section} pb-2 pr-2`}>
       <h2 className={`${styles.title} text text_type_main-medium mb-6`}>
         {sectionTitle}
       </h2>

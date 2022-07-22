@@ -2,9 +2,16 @@
 
 :root {
   --shadow-color: rgba(0, 0, 0, 0.04);
+  --shadow-color-theme: rgb(51, 51, 255);
   --box-shadow: 0px 24px 32px var(--shadow-color),
     0px 16px 24px var(--shadow-color), 0px 4px 8px var(--shadow-color),
     0px 0px 1px var(--shadow-color);
+  --box-shadow-theme: 0px 0px 16px 8px
+      transparentize(--shadow-color-theme, 0.25),
+    0px 0px 8px 8px transparentize(--shadow-color-theme, 0.25);
+  --shadow-filter: drop-shadow(
+    0px 4px 32px transparentize(--shadow-color-theme, 0.5)
+  );
 }
 
 body {
@@ -64,13 +71,13 @@ code {
   }
 }
 
-@media (min-width: 641px) {
+@media only screen and (min-width: 768px) {
   .form .input_size_default {
     width: 480px;
   }
 }
 
-@media (max-width: 640px) {
+@media only screen and (max-width: 767px) {
   main .page_container {
     min-height: auto;
     padding: 20px 8px;
@@ -115,10 +122,6 @@ code {
     .input__placeholder-filled {
       top: 4px;
     }
-
-    // .input__placeholder {
-    //   top: 12px;
-    // }
 
     button {
       font-size: 14px;

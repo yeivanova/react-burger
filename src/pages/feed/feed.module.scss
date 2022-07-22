@@ -17,6 +17,7 @@
   max-width: 50%;
   min-width: 600px;
   min-height: 400px;
+  margin: 0 auto;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -60,26 +61,28 @@
   display: flex;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
+@media only screen and (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    position: absolute;
+    background: #2f2f37;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--text-inactive-color);
+    border: 1px solid var(--primary-color);
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+  }
 }
 
-::-webkit-scrollbar-track {
-  position: absolute;
-  background: #2f2f37;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--text-inactive-color);
-  border: 1px solid var(--primary-color);
-  box-sizing: border-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
-}
-
-@media (max-width: 640px) {
+@media only screen and (max-width: 767px) {
   .page_container {
     max-height: none;
     padding: 20px 8px;
@@ -119,7 +122,7 @@
     width: 100%;
 
     & > div {
-      min-width: 50%;
+      width: 50%;
       padding-left: 10px;
       padding-right: 10px;
     }

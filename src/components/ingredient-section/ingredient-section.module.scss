@@ -13,7 +13,11 @@
   margin: 0;
 }
 
-@media (max-width: 640px) {
+@media only screen and (max-width: 767px) {
+  .section {
+    padding-right: 0;
+  }
+
   .title {
     margin-bottom: 16px;
   }

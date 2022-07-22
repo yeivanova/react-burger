@@ -1,14 +1,19 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import styles from "./constructor-item.module.scss";
 import {
   ConstructorElement,
   DragIcon,
+  DeleteIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { PriceBlock } from "../price-block/price-block";
 import { useDispatch } from "../../services/hooks";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { deleteItem } from "../../services/actions/constructor";
 import { TIngredient } from "../../services/types/data";
+import { MobileContext } from "../../services/app-context";
+import SwipeToDelete from "react-swipe-to-delete-ios";
+import { v4 as uuid } from "uuid";
 
 type TConstructorItemProps = {
   item: TIngredient;
@@ -29,6 +34,7 @@ export const ConstructorItem: FC<TConstructorItemProps> = ({
   index,
   moveCard,
 }) => {
+  const { isMobile } = useContext(MobileContext);
   const ref = useRef<HTMLLIElement>(null);
   const dispatch = useDispatch();
 
@@ -43,8 +49,8 @@ export const ConstructorItem: FC<TConstructorItemProps> = ({
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(drapItem, monitor) {
-      const item = drapItem as IDragItem;
+    hover(dropItem, monitor) {
+      const item = dropItem as IDragItem;
       if (!ref.current) {
         return;
       }
@@ -84,13 +90,71 @@ export const ConstructorItem: FC<TConstructorItemProps> = ({
 
   drag(drop(ref));
 
+  if (isMobile)
+    return (
+      <>
+        <li
+          className={styles.list_item}
+          ref={!isLocked ? ref : null}
+          data-handler-id={handlerId}
+        >
+          {!isLocked ? (
+            <SwipeToDelete
+              onDelete={() => {
+                dispatch(deleteItem(item));
+              }}
+              deleteWidth={144}
+              deleteColor="#E52B1A"
+              deleteComponent={<DeleteIcon type="primary" />}
+              id={uuid()}
+            >
+              <div className={styles.mobile_item}>
+                <DragIcon type="primary" />
+                <div className={styles.mobile_item_inner}>
+                  <img
+                    className={styles.mobile_item_img}
+                    src={item.image_mobile}
+                    alt={item.name}
+                  />
+                  <span
+                    className={`${styles.mobile_item_name} text text_type_main-default`}
+                  >
+                    {item.name}
+                  </span>
+                  <div className={styles.mobile_item_price}>
+                    <PriceBlock total={item.price}>{}</PriceBlock>
+                  </div>
+                </div>
+              </div>
+            </SwipeToDelete>
+          ) : (
+            <div className={styles.mobile_item_inner}>
+              <img
+                className={styles.mobile_item_img}
+                src={item.image_mobile}
+                alt={item.name}
+              />
+              <span
+                className={`${styles.mobile_item_name} text text_type_main-default`}
+              >
+                {item.name}
+              </span>
+              <div className={styles.mobile_item_price}>
+                <PriceBlock total={item.price}>{}</PriceBlock>
+              </div>
+            </div>
+          )}
+        </li>
+      </>
+    );
+
   return (
     <>
       <li
-        className={`${styles.item} ${isLocked && styles.item_bun} ${
-          isDragging && styles.drag_effect
+        className={`${styles.item} ${isLocked ? styles.item_bun : ""} ${
+          isDragging ? styles.drag_effect : ""
         }`}
-        ref={ref}
+        ref={!isLocked ? ref : null}
         data-handler-id={handlerId}
       >
         {!isLocked && <DragIcon type="primary" />}

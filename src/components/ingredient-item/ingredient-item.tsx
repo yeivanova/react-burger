@@ -9,6 +9,13 @@ import { Link, useLocation } from "react-router-dom";
 import { useDrag } from "react-dnd";
 import { TIngredient } from "../../services/types/data";
 import { MobileContext } from "../../services/app-context";
+import { useSelector, useDispatch } from "../../services/hooks";
+import {
+  addItem,
+  setBun,
+  sortItems,
+  cartReset,
+} from "../../services/actions/constructor";
 
 type TProps = {
   item: TIngredient;
@@ -22,6 +29,7 @@ export const IngredientItem: FC<TProps> = ({
   count,
 }) => {
   const { isMobile } = useContext(MobileContext);
+  const dispatch = useDispatch();
   const location = useLocation();
   const [{ dragEffect }, ref] = useDrag({
     type: "items",
@@ -30,6 +38,10 @@ export const IngredientItem: FC<TProps> = ({
       dragEffect: monitor.isDragging(),
     }),
   });
+
+  const mobileAddToCart = () => {
+    item.type === "bun" ? dispatch(setBun(item)) : dispatch(addItem(item));
+  };
 
   return (
     <li
@@ -66,7 +78,7 @@ export const IngredientItem: FC<TProps> = ({
         </div>
       </Link>
       {isMobile && (
-        <Button type="secondary" size="small">
+        <Button type="secondary" size="small" onClick={mobileAddToCart}>
           Добавить
         </Button>
       )}

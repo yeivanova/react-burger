@@ -90,7 +90,11 @@
   z-index: 1;
 }
 
-@media (max-width: 640px) {
+@media only screen and (max-width: 767px) {
+  .date {
+    text-align: right;
+  }
+
   .status {
     margin-bottom: 16px;
   }

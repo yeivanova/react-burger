@@ -10,15 +10,15 @@ import { TWsOrder } from "../types/data";
 
 type TWSState = {
   wsConnected: boolean;
-  error: Event | null;
+  isError: boolean;
   orders: Array<TWsOrder>;
   total: number | null;
   totalToday: number | null;
 };
 
-const initialState: TWSState = {
+export const initialState: TWSState = {
   wsConnected: false,
-  error: null,
+  isError: false,
   orders: [],
   total: null,
   totalToday: null,
@@ -38,20 +38,20 @@ export const wsAuthReducer = (
       return {
         ...state,
         wsConnected: true,
-        error: null,
+        isError: false,
       };
     }
     case WS_PROFILE_CONNECTION_ERROR: {
       return {
         ...state,
-        error: action.payload,
+        isError: true,
         wsConnected: false,
       };
     }
     case WS_PROFILE_CONNECTION_CLOSED: {
       return {
         ...state,
-        error: null,
+        isError: false,
         wsConnected: false,
       };
     }

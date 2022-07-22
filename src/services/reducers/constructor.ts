@@ -13,7 +13,7 @@ type TCartState = {
   bunItem: TIngredient | null;
 };
 
-const cartInitialState: TCartState = {
+export const cartInitialState: TCartState = {
   cartItems: [],
   bunItem: null,
 };

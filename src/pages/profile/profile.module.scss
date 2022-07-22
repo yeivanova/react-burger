@@ -85,7 +85,7 @@
   }
 }
 
-@media (min-width: 641px) {
+@media only screen and (min-width: 768px) {
   .form {
     .input_size_default {
       width: 480px;
@@ -93,13 +93,28 @@
   }
 }
 
-@media (max-width: 640px) {
+@media only screen and (max-width: 1279px) {
+  .column,
+  .sidebar {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .column {
+    flex-basis: auto;
+    min-width: 600px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
   .page_container {
     padding: 16px 8px;
   }
 
   .column {
     max-width: 100%;
+    min-width: auto;
+    flex-basis: 100%;
   }
 
   .column_inner {

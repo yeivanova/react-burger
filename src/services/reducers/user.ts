@@ -64,7 +64,7 @@ type TUserState = {
   isAuthenticated: boolean;
 };
 
-const userState: TUserState = {
+export const userState: TUserState = {
   userData: {
     name: null,
     email: null,

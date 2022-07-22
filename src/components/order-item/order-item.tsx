@@ -47,7 +47,7 @@ export const OrderItem: FC<TOrderDetailsProps> = ({ orderItem }) => {
         <span className="text text_type_digits-default">
           #{orderItem.number}
         </span>
-        <span className="text text_type_main-default text_color_inactive">
+        <span className={`${styles.date} text text_type_main-default text_color_inactive`}>
           {getDateFormat(orderItem.createdAt)}
         </span>
       </div>

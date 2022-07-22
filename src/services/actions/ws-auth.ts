@@ -18,10 +18,9 @@ export type TWsProfileConnectionSuccess = {
   type: typeof WS_PROFILE_CONNECTION_SUCCESS;
 };
 
-export type TWsProfileConnectionError = TActionCreator<
-  typeof WS_PROFILE_CONNECTION_ERROR,
-  Event
->;
+export type TWsProfileConnectionError = {
+  type: typeof WS_PROFILE_CONNECTION_ERROR;
+};
 
 export type TWsProfileConnectionClosed = {
   type: typeof WS_PROFILE_CONNECTION_CLOSED;
@@ -52,11 +51,8 @@ export const WsProfileConnectionSuccess = (): TWsProfileConnectionSuccess => ({
   type: WS_PROFILE_CONNECTION_SUCCESS,
 });
 
-export const WsProfileConnectionError = (
-  payload: Event
-): TWsProfileConnectionError => ({
+export const WsProfileConnectionError = (): TWsProfileConnectionError => ({
   type: WS_PROFILE_CONNECTION_ERROR,
-  payload,
 });
 
 export const WsProfileConnectionClosed = (): TWsProfileConnectionClosed => ({

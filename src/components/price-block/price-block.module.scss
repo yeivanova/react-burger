@@ -12,3 +12,28 @@
     vertical-align: bottom;
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .price_block {
+    width: 100%;
+    justify-content: space-around;
+
+    button {
+      min-width: 180px;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 10px;
+    }
+  }
+
+  .price {
+    font-size: 22px;
+    line-height: 24px;
+    margin-right: 0;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}

@@ -15,10 +15,10 @@ import {
 import { MobileContext } from "../../services/app-context";
 
 export const ProfilePage: FC = () => {
-  const { wsConnected, orders, error } = useSelector((store) => ({
+  const { wsConnected, orders, isError } = useSelector((store) => ({
     wsConnected: store.wsAuth.wsConnected,
     orders: store.wsAuth.orders,
-    error: store.wsAuth.error,
+    isError: store.wsAuth.isError,
   }));
 
   const { isMobile } = useContext(MobileContext);
@@ -57,7 +57,7 @@ export const ProfilePage: FC = () => {
           <ProtectedRoute path={url} exact={true}>
             <ProfileForm />
           </ProtectedRoute>
-          {error ? (
+          {isError ? (
             <div className="text text_type_main-large mt-10 mb-5">
               Ошибка при загрузке данных.
             </div>

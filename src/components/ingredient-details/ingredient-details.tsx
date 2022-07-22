@@ -15,7 +15,7 @@ export const IngredientDetails: FC = () => {
   );
 
   return ingredient ? (
-    <div className="pb-15">
+    <div className={`${styles.details_wrapper} pb-15`}>
       <img
         className={`${styles.ingredient_image}`}
         src={ingredient.image_large}
@@ -27,35 +27,35 @@ export const IngredientDetails: FC = () => {
       <div
         className={`${styles.ingredient_details} text text_type_main-default text_color_inactive`}
       >
-        <div>
+        <div className={styles.ingredient_details_item}>
           <div className="text text_type_main-default text_color_inactive mb-2">
             Калории, ккал
           </div>
-          <div className="ttext text_type_main-medium text_color_inactive">
+          <div className="text text_type_main-medium text_color_inactive">
             {ingredient.calories}
           </div>
         </div>
-        <div>
+        <div className={styles.ingredient_details_item}>
           <div className="text text_type_main-default text_color_inactive mb-2">
             Белки, г
           </div>
-          <div className="ttext text_type_main-medium text_color_inactive">
+          <div className="text text_type_main-medium text_color_inactive">
             {ingredient.proteins}
           </div>
         </div>
-        <div>
+        <div className={styles.ingredient_details_item}>
           <div className="text text_type_main-default text_color_inactive mb-2">
             Жиры, г
           </div>
-          <div className="ttext text_type_main-medium text_color_inactive">
+          <div className="text text_type_main-medium text_color_inactive">
             {ingredient.fat}
           </div>
         </div>
-        <div>
+        <div className={styles.ingredient_details_item}>
           <div className="text text_type_main-default text_color_inactive mb-2">
             Углеводы, г
           </div>
-          <div className="ttext text_type_main-medium text_color_inactive">
+          <div className="text text_type_main-medium text_color_inactive">
             {ingredient.carbohydrates}
           </div>
         </div>

@@ -14,17 +14,18 @@ import {
   WsProfileConnectionStart,
   WsProfileConnectionClosed,
 } from "../../services/actions/ws-auth";
+
 type TOrderPageProps = {
   isAuthOrders: boolean;
 };
 
 export const OrderPage: FC<TOrderPageProps> = ({ isAuthOrders }) => {
-  const { wsConnected, orders, error } = useSelector((store) => ({
+  const { wsConnected, orders, isError } = useSelector((store) => ({
     wsConnected: isAuthOrders ? store.wsAuth.wsConnected : store.ws.wsConnected,
     orders: isAuthOrders ? store.wsAuth.orders : store.ws.orders,
-    error: isAuthOrders ? store.wsAuth.error : store.ws.error,
+    isError: isAuthOrders ? store.wsAuth.isError : store.ws.isError,
   }));
-  console.log(isAuthOrders);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -62,16 +63,16 @@ export const OrderPage: FC<TOrderPageProps> = ({ isAuthOrders }) => {
 
   return (
     <>
-      {error ? (
+      {isError ? (
         <div className="text text_type_main-large mt-10 mb-5">
           Ошибка при загрузке данных.
         </div>
       ) : !wsConnected ? (
         <Preloader />
       ) : (
-        <div className="pt-10 pl-4 pr-4 pb-10">
+        <>
           {order && <OrderItemDetails isAuthOrders={isAuthOrders} />}
-        </div>
+        </>
       )}
     </>
   );
