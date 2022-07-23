@@ -51,7 +51,7 @@ export const IngredientItem: FC<TProps> = ({
       id={item._id}
       onClick={customClickEvent}
       key={item._id}
-      ref={ref}
+      ref={!isMobile ? ref : null}
     >
       <Link
         className={styles.link}

@@ -61,6 +61,10 @@ export const ProfilePage: FC = () => {
             <div className="text text_type_main-large mt-10 mb-5">
               Ошибка при загрузке данных.
             </div>
+          ) : typeof orders === "undefined" || orders.length === 0 ? (
+            <div className="text text_type_main-large mt-10 mb-5">
+              У вас пока нет заказов.
+            </div>
           ) : !wsConnected ? (
             <Preloader />
           ) : (
