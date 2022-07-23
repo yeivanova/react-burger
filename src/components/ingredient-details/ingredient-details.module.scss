@@ -2,9 +2,30 @@
   max-width: 540px;
   margin: auto;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
 }
 
 .ingredient_image {
   max-width: 100%;
+}
+
+@media only screen and (max-width: 767px) {
+  .details_wrapper {
+    padding: 56px 8px 28px;
+  }
+
+  .ingredient_image {
+    max-width: 240px;
+    max-height: 120px;
+  }
+
+  .ingredient_details {
+    margin-top: 48px;
+  }
+
+  .ingredient_details_item {
+    min-width: 50%;
+    margin-bottom: 32px;
+  }
 }

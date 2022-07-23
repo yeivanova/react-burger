@@ -1,5 +1,6 @@
 import React, {
   FC,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -16,6 +17,7 @@ import {
 import { TLocationState } from "../../services/types/data";
 import { useFormAndValidation } from "../../hooks/useFormAndValidation";
 import { updateUserDataRequest } from "../../utils/api";
+import { MobileContext } from "../../services/app-context";
 
 export const ProfileForm: FC = () => {
   const { user, isAuthenticated } = useSelector((store) => ({
@@ -23,6 +25,7 @@ export const ProfileForm: FC = () => {
     isAuthenticated: store.user.isAuthenticated,
   }));
 
+  const { isMobile } = useContext(MobileContext);
   const dispatch = useDispatch();
   const location = useLocation<TLocationState>();
 
@@ -75,75 +78,78 @@ export const ProfileForm: FC = () => {
   }
 
   return (
-    <form className={`form ${styles.form} mt-20`} onSubmit={onSubmit}>
-      <Input
-        placeholder="Имя"
-        value={values["name"] ?? ""}
-        name="name"
-        icon="EditIcon"
-        ref={inputNameRef}
-        onIconClick={() => {
-          setDisabled(false);
-          setShowButtons(true);
-          setTimeout(() => inputNameRef.current?.focus(), 0);
-        }}
-        onChange={handleChange}
-        onBlur={onBlur}
-        error={false}
-        disabled={fieldDisabled}
-      />
+    <>
+      {isMobile && <h1 className="text text_type_main-large">Профиль</h1>}
+      <form className={`form ${styles.form} mt-20`} onSubmit={onSubmit}>
+        <Input
+          placeholder="Имя"
+          value={values["name"] ?? ""}
+          name="name"
+          icon="EditIcon"
+          ref={inputNameRef}
+          onIconClick={() => {
+            setDisabled(false);
+            setShowButtons(true);
+            setTimeout(() => inputNameRef.current?.focus(), 0);
+          }}
+          onChange={handleChange}
+          onBlur={onBlur}
+          error={false}
+          disabled={fieldDisabled}
+        />
 
-      <Input
-        placeholder="Логин"
-        value={values["email"] ?? ""}
-        name="email"
-        errorText={"Проверьте формат email-адреса"}
-        icon="EditIcon"
-        ref={inputEmailRef}
-        onIconClick={() => {
-          setDisabled(false);
-          setShowButtons(true);
-          setTimeout(() => inputEmailRef.current?.focus(), 0);
-        }}
-        onChange={handleChange}
-        onBlur={onBlur}
-        error={false}
-        disabled={fieldDisabled}
-      />
+        <Input
+          placeholder="Логин"
+          value={values["email"] ?? ""}
+          name="email"
+          errorText={"Проверьте формат email-адреса"}
+          icon="EditIcon"
+          ref={inputEmailRef}
+          onIconClick={() => {
+            setDisabled(false);
+            setShowButtons(true);
+            setTimeout(() => inputEmailRef.current?.focus(), 0);
+          }}
+          onChange={handleChange}
+          onBlur={onBlur}
+          error={false}
+          disabled={fieldDisabled}
+        />
 
-      <Input
-        type="password"
-        placeholder="Пароль"
-        value={values["password"] ?? ""}
-        name={"password"}
-        icon="EditIcon"
-        ref={inputPasswordRef}
-        onIconClick={() => {
-          setDisabled(false);
-          setShowButtons(true);
-          setTimeout(() => inputPasswordRef.current?.focus(), 0);
-        }}
-        onChange={handleChange}
-        onBlur={onBlur}
-        error={false}
-        disabled={fieldDisabled}
-      />
+        <Input
+          type="password"
+          placeholder="Пароль"
+          value={values["password"] ?? ""}
+          name={"password"}
+          icon="EditIcon"
+          ref={inputPasswordRef}
+          onIconClick={() => {
+            setDisabled(false);
+            setShowButtons(true);
+            setTimeout(() => inputPasswordRef.current?.focus(), 0);
+          }}
+          onChange={handleChange}
+          onBlur={onBlur}
+          error={false}
+          disabled={fieldDisabled}
+        />
 
-      {showButtons ? (
-        <div className={`${styles.button_row} mt-5`}>
-          <Button type="primary" size="medium">
-            Сохранить
-          </Button>
-          <Button
-            type="secondary"
-            size="medium"
-            htmlType="button"
-            onClick={onCancel}
-          >
-            Отмена
-          </Button>
-        </div>
-      ) : null}
-    </form>
+        {showButtons ? (
+          <div className={`${styles.button_row} mt-5`}>
+            <Button type="primary" size="medium">
+              Сохранить
+            </Button>
+            <Button
+              type="secondary"
+              size="medium"
+              htmlType="button"
+              onClick={onCancel}
+            >
+              Отмена
+            </Button>
+          </div>
+        ) : null}
+      </form>
+    </>
   );
 };

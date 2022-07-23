@@ -1,12 +1,10 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useContext, useEffect } from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./order-item-details.module.scss";
 import { Preloader } from "../preloader/preloader";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { v4 as uuid } from "uuid";
 import { useParams } from "react-router";
-import { TIngredient } from "../../services/types/data";
-import { TWsOrder } from "../../services/types/data";
 import {
   WsOrderConnectionStart,
   WsOrderConnectionClosed,
@@ -16,6 +14,7 @@ import {
   WsProfileConnectionClosed,
 } from "../../services/actions/ws-auth";
 import { getDateFormat } from "../../utils/utils";
+import { MobileContext } from "../../services/app-context";
 
 type TOrderItemDetailsProps = {
   isAuthOrders: boolean;
@@ -28,14 +27,14 @@ export const OrderItemDetails: FC<TOrderItemDetailsProps> = ({
     items: store.ingredients.items,
   }));
 
-  const { wsConnected, orders, error } = useSelector((store) => ({
+  const { wsConnected, orders, isError } = useSelector((store) => ({
     wsConnected: isAuthOrders ? store.wsAuth.wsConnected : store.ws.wsConnected,
     orders: isAuthOrders ? store.wsAuth.orders : store.ws.orders,
-    error: isAuthOrders ? store.wsAuth.error : store.ws.error,
+    isError: isAuthOrders ? store.wsAuth.isError : store.ws.isError,
   }));
 
+  const { isMobile } = useContext(MobileContext);
   const orderId = useParams<{ id: string }>().id;
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -60,7 +59,7 @@ export const OrderItemDetails: FC<TOrderItemDetailsProps> = ({
         }
       };
     }
-  }, [dispatch, wsConnected]);
+  }, [dispatch, wsConnected, isAuthOrders]);
 
   let order, orderItems, total, element;
 
@@ -87,7 +86,7 @@ export const OrderItemDetails: FC<TOrderItemDetailsProps> = ({
 
   return (
     <div className={`${styles.order} pt-10 pb-10`}>
-      {error ? (
+      {isError ? (
         <div className="text text_type_main-large mt-10 mb-5">
           Ошибка при загрузке данных.
         </div>
@@ -95,12 +94,21 @@ export const OrderItemDetails: FC<TOrderItemDetailsProps> = ({
         <Preloader />
       ) : (
         <>
+          {isMobile && (
+            <p className={`${styles.modal_header} text text_type_main-large`}>
+              Детали заказа
+            </p>
+          )}
           <p className={`${styles.number} text text_type_digits-default mb-10`}>
             #{order.number}
           </p>
           <p className="text text_type_main-medium mb-3">{order.name}</p>
           {typeof order.status !== "undefined" && (
-            <div className={`${order.status === "done" && styles.done} mb-15`}>
+            <div
+              className={`${styles.status} ${
+                order.status === "done" && styles.done
+              } mb-15`}
+            >
               {order.status === "done"
                 ? "Выполнен"
                 : "pending"

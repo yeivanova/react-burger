@@ -3,6 +3,13 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: bottom;
+  }
 }
 
 .done {
@@ -80,11 +87,29 @@
   transform: translate(-50%, -50%);
   color: #f2f2f3;
   text-align: center;
+  z-index: 1;
 }
 
-svg {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  vertical-align: bottom;
+@media only screen and (max-width: 767px) {
+  .date {
+    text-align: right;
+  }
+
+  .status {
+    margin-bottom: 16px;
+  }
+
+  .preview_item {
+    width: 32px;
+    height: 32px;
+
+    img {
+      width: 56px;
+      height: auto;
+    }
+  }
+
+  .more_items {
+    height: 18px;
+  }
 }

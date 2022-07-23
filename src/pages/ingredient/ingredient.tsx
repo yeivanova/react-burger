@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 import { Redirect } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Preloader } from "../components/preloader/preloader";
-import { IngredientDetails } from "../components/ingredient-details/ingredient-details";
+import { Preloader } from "../../components/preloader/preloader";
+import { IngredientDetails } from "../../components/ingredient-details/ingredient-details";
 import styles from "./ingredient.module.scss";
 import { useParams } from "react-router-dom";
-import { useSelector } from "../services/hooks";
-import { TLocationState } from "../services/types/data";
+import { useSelector } from "../../services/hooks";
+import { TLocationState } from "../../services/types/data";
 
 export const IngredientPage: FC = () => {
   const { items, itemsRequest, itemsFailed } = useSelector((store) => ({

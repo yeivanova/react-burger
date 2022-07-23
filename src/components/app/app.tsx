@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { getUserDataRequest } from "../../utils/api";
 import {
@@ -27,6 +27,7 @@ import { IngredientDetails } from "../ingredient-details/ingredient-details";
 import { OrderItemDetails } from "../order-item-details/order-item-details";
 import { loadData } from "../../utils/api";
 import { Location } from "history";
+import { MobileContext } from "../../services/app-context";
 
 const Main: FC = () => {
   const { isAuthenticated } = useSelector((store) => ({
@@ -44,6 +45,7 @@ const Main: FC = () => {
   useEffect(() => {
     initUser();
     dispatch(loadData());
+    document.body.classList.remove("no-scroll");
   }, [dispatch]);
 
   const history = useHistory();
@@ -126,9 +128,34 @@ const Main: FC = () => {
 };
 
 export const App: FC = () => {
+  const [isMobile, setIsMobile] = React.useState<boolean>(false);
+  const [windowDimension, setWindowDimension] = useState<number | null>(null);
+
+  useEffect(() => {
+    setWindowDimension(window.innerWidth);
+    windowDimension && windowDimension <= 767
+      ? setIsMobile(true)
+      : setIsMobile(false);
+  }, [windowDimension, isMobile]);
+
+  useEffect(() => {
+    function handleWindowResize() {
+      setWindowDimension(window.innerWidth);
+    }
+
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
   return (
-    <BrowserRouter>
-      <Main />
+    <BrowserRouter basename="/react-burger">
+      <MobileContext.Provider
+        value={{ isMobile: isMobile, changeIsMobile: setIsMobile }}
+      >
+        <Main />
+      </MobileContext.Provider>
     </BrowserRouter>
   );
 };

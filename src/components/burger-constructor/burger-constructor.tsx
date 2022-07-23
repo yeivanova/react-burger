@@ -1,11 +1,14 @@
-import React, { useState, useMemo, FC } from "react";
+import React, { useContext, useState, useMemo, FC } from "react";
 import { v4 as uuid } from "uuid";
 import styles from "./burger-constructor.module.scss";
 import { ConstructorItem } from "../constructor-item/constructor-item";
 import { PriceBlock } from "../price-block/price-block";
 import { OrderDetails } from "../order-details/order-details";
 import { Modal } from "../modal/modal";
-import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Button,
+  CloseIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { useDrop } from "react-dnd";
 import {
@@ -18,12 +21,15 @@ import { numberReset } from "../../services/actions/order";
 import { getOrder } from "../../utils/api";
 import { useHistory } from "react-router-dom";
 import { TIngredient } from "../../services/types/data";
+import { MobileContext } from "../../services/app-context";
 
 interface IDragItem {
   item: TIngredient;
 }
 
 export const BurgerConstructor: FC = () => {
+  const { isMobile } = useContext(MobileContext);
+  const [isConstructorExpanded, setIsConstructorExpanded] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -70,9 +76,11 @@ export const BurgerConstructor: FC = () => {
     setDisplayModal(false);
     dispatch(numberReset());
     dispatch(cartReset());
+    setIsConstructorExpanded(false);
   };
 
   const makeOrder = () => {
+    setIsConstructorExpanded(false);
     if (!isAuthenticated) {
       history.replace({ pathname: `/login` });
       return;
@@ -94,50 +102,96 @@ export const BurgerConstructor: FC = () => {
 
   return (
     <>
-      <section className={`${styles.product_list} pl-4 pb-10`}>
-        <ul
-          className={`${styles.inner} ${styles.list} ${
-            isHover ? styles.on_hover : ""
-          } `}
-          ref={dropTarget}
-        >
-          {bunItem !== null && (
-            <ConstructorItem
-              item={bunItem}
-              key={uuid()}
-              type={"top"}
-              isLocked={true}
-            />
+      {isMobile && totalPrice !== 0 && (
+        <div className={styles.see_order}>
+          <PriceBlock total={totalPrice}>
+            <Button
+              onClick={() => {
+                setIsConstructorExpanded(!isConstructorExpanded);
+                document.body.classList.add("no-scroll");
+              }}
+            >
+              Смотреть заказ
+            </Button>
+          </PriceBlock>
+        </div>
+      )}
+      <div
+        className={`${isMobile ? styles.constructor_window : ""} ${
+          isConstructorExpanded ? styles.expanded : ""
+        }`}
+      >
+        <section className={`${styles.product_list} pl-4 pb-10`}>
+          {isMobile && (
+            <>
+              <button
+                className={`${styles.modal_close}`}
+                onClick={() => {
+                  setIsConstructorExpanded(!isConstructorExpanded);
+                  document.body.classList.remove("no-scroll");
+                }}
+              >
+                <CloseIcon type="primary" />
+              </button>
+              <p className={`${styles.modal_header} text text_type_main-large`}>
+                Заказ
+              </p>
+            </>
           )}
-          {cartItems.map((item, index) => (
-            <ConstructorItem
-              item={item}
-              isLocked={false}
-              key={item.uuid}
-              moveCard={moveCard}
-              index={index}
-            />
-          ))}
-          {bunItem !== null && (
-            <ConstructorItem
-              item={bunItem}
-              key={uuid()}
-              type={"bottom"}
-              isLocked={true}
-            />
+          {!isMobile && bunItem === null && cartItems.length === 0 && (
+            <p
+              className={`${styles.tip_text} text text_type_main-default text_color_inactive`}
+            >
+              Перетащи игредиенты сюда
+            </p>
           )}
-        </ul>
-      </section>
-      <PriceBlock total={totalPrice}>
-        <Button
-          type="primary"
-          size="large"
-          disabled={bunItem === null && true}
-          onClick={makeOrder}
-        >
-          Оформить заказ
-        </Button>
-      </PriceBlock>
+          <ul
+            id="constructor"
+            className={`${styles.inner} ${styles.list} ${
+              isHover ? styles.on_hover : ""
+            }`}
+            ref={dropTarget}
+          >
+            {bunItem !== null && (
+              <ConstructorItem
+                item={bunItem}
+                key={uuid()}
+                type={"top"}
+                isLocked={true}
+              />
+            )}
+            {cartItems.map((item, index) => (
+              <ConstructorItem
+                item={item}
+                isLocked={false}
+                key={item.uuid}
+                moveCard={moveCard}
+                index={index}
+              />
+            ))}
+            {bunItem !== null && (
+              <ConstructorItem
+                item={bunItem}
+                key={uuid()}
+                type={"bottom"}
+                isLocked={true}
+              />
+            )}
+          </ul>
+        </section>
+        <div className={isMobile ? styles.see_order : ""}>
+          <PriceBlock total={totalPrice}>
+            <Button
+              type="primary"
+              size="large"
+              disabled={bunItem === null && true}
+              onClick={makeOrder}
+            >
+              Оформить заказ
+            </Button>
+          </PriceBlock>
+        </div>
+      </div>
       {displayModal && !error && (
         <Modal closeMe={closeModal}>
           <OrderDetails orderNumber={orderNumber} />

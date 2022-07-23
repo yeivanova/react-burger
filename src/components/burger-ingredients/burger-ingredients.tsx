@@ -1,4 +1,5 @@
 import React, {
+  useContext,
   useRef,
   useMemo,
   FC,
@@ -11,7 +12,7 @@ import styles from "./burger-ingredients.module.scss";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector, useDispatch } from "../../services/hooks";
 import { changeTab } from "../../services/actions/ingredients";
-import { TIngredient } from "../../services/types/data";
+import { MobileContext } from "../../services/app-context";
 
 type TCounter = {
   [_id: string]: number;
@@ -25,6 +26,7 @@ export const BurgerIngredients: FC = () => {
     bunItem: store.cartItems.bunItem,
   }));
 
+  const { isMobile } = useContext(MobileContext);
   const dispatch = useDispatch();
 
   const ingredientsCounter = useMemo(() => {

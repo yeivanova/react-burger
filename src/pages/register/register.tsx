@@ -5,9 +5,9 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector, useDispatch } from "../services/hooks";
-import { registrationRequest } from "../utils/api";
-import { useFormAndValidation } from "../hooks/useFormAndValidation";
+import { useSelector, useDispatch } from "../../services/hooks";
+import { registrationRequest } from "../../utils/api";
+import { useFormAndValidation } from "../../hooks/useFormAndValidation";
 
 export const RegisterPage: FC = () => {
   const { isAuthenticated } = useSelector((store) => ({
@@ -63,7 +63,7 @@ export const RegisterPage: FC = () => {
         <Button type="primary" size="medium">
           Зарегистрироваться
         </Button>
-        <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
+        <p className="prompt_text text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
           Уже зарегистрированы?&nbsp;
           <Link to={{ pathname: "/login" }} className="link">
             Войти

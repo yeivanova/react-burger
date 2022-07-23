@@ -18,10 +18,9 @@ export type TWsOrderConnectionSuccess = {
   type: typeof WS_CONNECTION_SUCCESS;
 };
 
-export type TWsOrderConnectionError = TActionCreator<
-  typeof WS_CONNECTION_ERROR,
-  Event
->;
+export type TWsOrderConnectionError = {
+  type: typeof WS_CONNECTION_ERROR;
+};
 
 export type TWsOrderConnectionClosed = {
   type: typeof WS_CONNECTION_CLOSED;
@@ -52,11 +51,8 @@ export const WsOrderConnectionSuccess = (): TWsOrderConnectionSuccess => ({
   type: WS_CONNECTION_SUCCESS,
 });
 
-export const WsOrderConnectionError = (
-  payload: Event
-): TWsOrderConnectionError => ({
+export const WsOrderConnectionError = (): TWsOrderConnectionError => ({
   type: WS_CONNECTION_ERROR,
-  payload,
 });
 
 export const WsOrderConnectionClosed = (): TWsOrderConnectionClosed => ({

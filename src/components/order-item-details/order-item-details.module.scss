@@ -91,8 +91,60 @@ svg {
   }
 }
 
-@media (maz-width: 640px) {
+@media only screen and (max-width: 767px) {
+  .order {
+    max-width: none;
+    padding: 16px 8px;
+  }
+
   .item {
     min-width: auto;
+  }
+
+  .modal_header {
+    margin-bottom: 32px;
+  }
+
+  .number {
+    margin-bottom: 24px;
+  }
+
+  .status {
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 24px;
+  }
+
+  .img_wrapper {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+  }
+
+  .img {
+    width: 56px;
+    height: 28px;
+  }
+
+  .name {
+    max-width: 48%;
+  }
+
+  .column_inner {
+    max-height: none;
+
+    ul {
+      padding: 0;
+    }
+  }
+
+  .info {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--background);
+    padding: 8px;
+    z-index: 1;
   }
 }

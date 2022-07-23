@@ -7,20 +7,19 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "../services/hooks";
-import { isPasswordReseted } from "../services/actions/user";
-import { resetPasswordRequest } from "../utils/api";
-import { useFormAndValidation } from "../hooks/useFormAndValidation";
-import { TLocationState } from "../services/types/data";
+import { useSelector, useDispatch } from "../../services/hooks";
+import { isPasswordReseted } from "../../services/actions/user";
+import { resetPasswordRequest } from "../../utils/api";
+import { useFormAndValidation } from "../../hooks/useFormAndValidation";
+import { TLocationState } from "../../services/types/data";
 
 export const ResetPasswordPage: FC = () => {
-  const { isTokenRequested, isAuthenticated, isPasswordResetedFlag } = useSelector(
-    (store) => ({
+  const { isTokenRequested, isAuthenticated, isPasswordResetedFlag } =
+    useSelector((store) => ({
       isTokenRequested: store.user.forgotPassword.isTokenRequested,
       isPasswordResetedFlag: store.user.resetPassword.isPasswordReseted,
       isAuthenticated: store.user.isAuthenticated,
-    })
-  );
+    }));
 
   const { values, handleChange } = useFormAndValidation();
 
@@ -78,7 +77,7 @@ export const ResetPasswordPage: FC = () => {
         <Button type="primary" size="medium">
           Сохранить
         </Button>
-        <p className="text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
+        <p className="prompt_text text text_type_main-default text_color_inactive pt-20 mt-0 mb-4">
           Вспомнили пароль?&nbsp;
           <Link to={{ pathname: "/login" }} className="link">
             Войти

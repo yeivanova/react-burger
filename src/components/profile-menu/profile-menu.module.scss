@@ -1,29 +1,12 @@
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  box-sizing: border-box;
-  flex: 0 1 320px;
-  width: 50%;
-  max-width: 320px;
-  box-sizing: border-box;
-  text-align: left;
-
-  ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-}
-
-.text {
-  opacity: 0.4;
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .link {
   display: flex;
   align-items: center;
-  padding: 17px 0;
   color: var(--text-inactive-color);
   border: none;
   text-decoration: none;
@@ -37,8 +20,11 @@
 
 .button {
   display: flex;
+  padding: 0;
   align-items: center;
-  padding: 17px 0;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
   color: var(--text-inactive-color);
   background: transparent;
   border: none;
@@ -59,7 +45,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media only screen and (max-width: 767px) {
   .sidebar {
     max-width: 100%;
   }

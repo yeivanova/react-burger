@@ -20,7 +20,7 @@ export function getDateFormat(orderDateString: string): string {
     newStr = orderDate.format("DD.MM.YYYY");
   }
 
-  newStr = `${newStr}, ${orderDate.format("HH:mm")} i-GMT${
+  newStr = `${newStr}, ${orderDate.format("HH:mm")}\xA0i\u2011GMT${
     offset > 0 ? "+" : "-"
   }${offset}`;
   return newStr;

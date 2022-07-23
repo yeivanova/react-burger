@@ -2,9 +2,16 @@
 
 :root {
   --shadow-color: rgba(0, 0, 0, 0.04);
+  --shadow-color-theme: rgb(51, 51, 255);
   --box-shadow: 0px 24px 32px var(--shadow-color),
     0px 16px 24px var(--shadow-color), 0px 4px 8px var(--shadow-color),
     0px 0px 1px var(--shadow-color);
+  --box-shadow-theme: 0px 0px 16px 8px
+      transparentize(--shadow-color-theme, 0.25),
+    0px 0px 8px 8px transparentize(--shadow-color-theme, 0.25);
+  --shadow-filter: drop-shadow(
+    0px 4px 32px transparentize(--shadow-color-theme, 0.5)
+  );
 }
 
 body {
@@ -14,6 +21,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.no-scroll {
+  overflow: hidden;
 }
 
 code {
@@ -48,15 +59,79 @@ code {
   margin: auto;
 }
 
-.input__container {
-  width: 100%;
-  margin-bottom: 24px;
+.form {
+  .input__container {
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 24px;
+  }
+
+  .input_size_default {
+    width: 100%;
+  }
 }
 
-@media (min-width: 641px) {
+@media only screen and (min-width: 768px) {
+  .form .input_size_default {
+    width: 480px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  main .page_container {
+    min-height: auto;
+    padding: 20px 8px;
+  }
+
+  .text.text_type_main-large {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  .text.text_type_main-medium {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .text.text_type_main-default {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .text.text_type_digits-large {
+    font-size: 72px;
+    line-height: 80px;
+  }
+
+  .text.text_type_digits-default {
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  h1.text.text_type_main-medium {
+    font-size: 28px;
+    line-height: 32px;
+  }
+
   .form {
     .input_size_default {
-      width: 480px;
+      min-height: 48px;
+      padding: 0 20px;
     }
+
+    .input__placeholder-filled {
+      top: 4px;
+    }
+
+    button {
+      font-size: 14px;
+      line-height: 1.4;
+      padding: 10px 32px;
+      margin-bottom: 8px;
+    }
+  }
+
+  .text.prompt_text {
+    padding-top: 40px;
   }
 }

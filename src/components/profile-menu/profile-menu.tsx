@@ -33,41 +33,31 @@ export const ProfileMenu: FC = () => {
   }
 
   return (
-    <aside className={`${styles.sidebar} mt-20 mr-15`}>
-      <ul>
-        <li>
-          <NavLink
-            to="/profile"
-            exact
-            className={`${styles.link} text_type_main-medium`}
-            activeClassName={styles.link_state_current}
-          >
-            Профиль
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={{ pathname: "/profile/orders" }}
-            className={`${styles.link} text_type_main-medium`}
-            activeClassName={styles.link_state_current}
-          >
-            История заказов
-          </NavLink>
-        </li>
-        <li>
-          <button
-            className={`${styles.button} text_type_main-medium`}
-            onClick={onLogoutClick}
-          >
-            Выход
-          </button>
-        </li>
-      </ul>
-      <p
-        className={`${styles.text} text text_type_main-default text_color_inactive mt-20 mb-10`}
-      >
-        В этом разделе вы можете <br /> изменить свои персональные данные
-      </p>
-    </aside>
+    <ul>
+      <li>
+        <NavLink
+          to="/profile"
+          exact
+          className={styles.link}
+          activeClassName={styles.link_state_current}
+        >
+          Профиль
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to={{ pathname: "/profile/orders" }}
+          className={styles.link}
+          activeClassName={styles.link_state_current}
+        >
+          История заказов
+        </NavLink>
+      </li>
+      <li>
+        <button className={styles.button} onClick={onLogoutClick}>
+          Выход
+        </button>
+      </li>
+    </ul>
   );
 };

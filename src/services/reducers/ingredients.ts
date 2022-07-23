@@ -21,13 +21,13 @@ type TIngredientsStateTab = {
   currentTab: SetStateAction<string>;
 };
 
-const initialState: TIngredientsState = {
+export const initialState: TIngredientsState = {
   items: [],
   itemsRequest: false,
   itemsFailed: false,
 };
 
-const initialStateTab: TIngredientsStateTab = {
+export const initialStateTab: TIngredientsStateTab = {
   currentTab: "bun",
 };
 
